@@ -1,0 +1,56 @@
+name: AI Crawler Index
+description: >-
+  A read-only, keyless reference dataset describing AI/web crawlers — including robots.txt tokens, user-agent
+  substrings, operator documentation, robots.txt compliance, verification methods, and mirrored operator-published IP
+  ranges normalized into one schema with provenance and SHA-256 checksums. Covers 56 crawlers from 30 operators across 9
+  categories. Data licensed CC0-1.0.
+url: https://raw.githubusercontent.com/api-evangelist/ai-crawler-index/refs/heads/main/apis.yml
+created: '2026-08-31'
+modified: '2026-08-31'
+specificationVersion: '0.21'
+tags:
+  - ai-crawlers
+  - robots.txt
+  - user-agents
+  - bot-management
+  - ip-ranges
+  - web-scraping
+  - ai-agents
+  - open-data
+  - security
+  - reference-dataset
+  - llms.txt
+apis:
+  - name: AI Crawler Index API
+    description: >-
+      Keyless, CORS-open, read-only HTTP API serving JSON/CSV/TXT reference data about AI/web crawlers, operators,
+      categories, robots.txt policies, IP ranges, and detection primitives.
+    humanURL: https://www.pathwren.workers.dev/api.html
+    baseURL: https://www.pathwren.workers.dev
+    tags:
+      - ai-crawlers
+      - robots.txt
+      - user-agents
+      - bot-management
+      - ip-ranges
+      - web-scraping
+      - ai-agents
+      - open-data
+      - security
+      - reference-dataset
+      - llms.txt
+    properties:
+      - type: OpenAPI
+        url: https://www.pathwren.workers.dev/openapi.json
+      - type: Documentation
+        url: https://www.pathwren.workers.dev/api.html
+      - type: LLMsTxt
+        url: https://www.pathwren.workers.dev/llms.txt
+maintainers:
+  - FN: AI Crawler Index
+    url: https://www.pathwren.workers.dev/
+generated:
+  by: apis.io/add
+  model: claude-opus-4-8
+  confidence: 98
+  at: '2026-08-31T21:22:22.857Z'
