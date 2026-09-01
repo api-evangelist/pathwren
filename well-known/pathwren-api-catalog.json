@@ -1,0 +1,72 @@
+{
+ "linkset": [
+  {
+   "anchor": "https://www.pathwren.workers.dev/",
+   "service-desc": [
+    {
+     "href": "https://www.pathwren.workers.dev/openapi.json",
+     "type": "application/vnd.oai.openapi+json",
+     "title": "AI Crawler Index OpenAPI 3.1 description"
+    },
+    {
+     "href": "https://www.pathwren.workers.dev/openapi.yaml",
+     "type": "application/yaml",
+     "title": "AI Crawler Index OpenAPI 3.1 description, YAML"
+    }
+   ],
+   "service-doc": [
+    {
+     "href": "https://www.pathwren.workers.dev/api.html",
+     "type": "text/html",
+     "title": "AI Crawler Index API documentation"
+    },
+    {
+     "href": "https://www.pathwren.workers.dev/.well-known/api-onboarding",
+     "type": "application/json",
+     "title": "Getting started: no key, what to call first"
+    },
+    {
+     "href": "https://www.pathwren.workers.dev/security.html",
+     "type": "text/html",
+     "title": "Security posture: what this host runs and what it will not serve"
+    }
+   ],
+   "service-meta": [
+    {
+     "href": "https://www.pathwren.workers.dev/apis.json",
+     "type": "application/json",
+     "title": "AI Crawler Index APIs.json 1.0 record"
+    },
+    {
+     "href": "https://www.pathwren.workers.dev/.well-known/x402",
+     "type": "application/json",
+     "title": "x402 payment discovery: nothing here is paid (accepts is empty, no 402 is ever returned)"
+    }
+   ],
+   "item": [
+    {
+     "href": "https://www.pathwren.workers.dev/data/agents.json",
+     "type": "application/json",
+     "title": "Every crawler record"
+    },
+    {
+     "href": "https://www.pathwren.workers.dev/ip-ranges/all.json",
+     "type": "application/json",
+     "title": "Union of published IP ranges"
+    },
+    {
+     "href": "https://www.pathwren.workers.dev/status.json",
+     "type": "application/json",
+     "title": "Upstream source status"
+    }
+   ],
+   "describedby": [
+    {
+     "href": "https://www.pathwren.workers.dev/llms.txt",
+     "type": "text/plain",
+     "title": "llms.txt"
+    }
+   ]
+  }
+ ]
+}

@@ -1,0 +1,10 @@
+# AI Crawler Index
+Contact: https://www.pathwren.workers.dev/about.html
+Contact: mailto:pathwren@tutamail.com
+Expires: 2027-09-01T11:48:49Z
+Preferred-Languages: en
+Canonical: https://www.pathwren.workers.dev/.well-known/security.txt
+Policy: https://www.pathwren.workers.dev/security.html
+# Policy above is the posture document: what this host runs, and why /server-status, /debug, /admin, /.env and /.git/* are 404 rather than hidden.
+# Machine-readable copy: https://www.pathwren.workers.dev/security.json
+# Corrections to the data are security-adjacent here: a wrong robots token or a stale prefix list makes somebody's block fail open. Report them the same way.

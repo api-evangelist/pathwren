@@ -1,0 +1,99 @@
+generated: '2026-09-01'
+method: probed
+source: >-
+  Direct unauthenticated GETs against the single API/docs host declared in apis.yml baseURL and
+  in the OpenAPI servers[] block (https://www.pathwren.workers.dev). Every status below is the
+  code that host actually returned on 2026-09-01.
+hosts:
+- host: www.pathwren.workers.dev
+  documents:
+  - path: /.well-known/security.txt
+    status: 200
+    file: well-known/pathwren-security.txt
+    content_type: text/plain
+    note: >-
+      Real RFC 9116 document: Contact (about page + mailto), Expires 2027-09-01, Preferred-Languages,
+      Canonical and a Policy URL pointing at https://www.pathwren.workers.dev/security.html.
+  - path: /.well-known/api-catalog
+    status: 200
+    file: well-known/pathwren-api-catalog.json
+    content_type: application/linkset+json
+    note: >-
+      Served as a real RFC 9727 / RFC 9264 linkset — service-desc (openapi.json + openapi.yaml),
+      service-doc (api.html, api-onboarding, security.html), service-meta (apis.json, x402) and
+      item[] links to the bulk data files. Not an HTML shell.
+  - path: /.well-known/ai-plugin.json
+    status: 200
+    file: well-known/pathwren-ai-plugin.json
+    content_type: application/json
+    note: >-
+      schema_version v1, auth type none, api.type openapi pointing at /openapi.json.
+  - path: /.well-known/mcp.json
+    status: 200
+    file: well-known/pathwren-mcp.json
+    content_type: application/json
+    note: >-
+      Non-standard path (the provider says so itself in a $comment) carrying the official MCP
+      Registry record verbatim under x-registry-record, plus the tool lists for all three
+      MCP servers this host runs.
+  - path: /.well-known/api-onboarding
+    status: 200
+    file: well-known/pathwren-api-onboarding.json
+    content_type: application/json
+    note: >-
+      Machine-readable getting-started: authentication (none), rate_limits, conditional-request
+      behaviour, CORS, a three-step quickstart and key_endpoints[] with curl lines.
+  - path: /.well-known/agent-card.json
+    status: 200
+    file: a2a/pathwren-agent-card.json
+    content_type: application/json
+    note: A2A 1.0 agent card, six skills. Graded in a2a/pathwren-a2a.yml.
+  - path: /.well-known/agent.json
+    status: 200
+    file: a2a/pathwren-agent-card.json
+    content_type: application/json
+    note: >-
+      Legacy pre-0.3 agent-card path. Byte-identical to /.well-known/agent-card.json
+      (both 5832 bytes), so it is stored once rather than twice.
+  - path: /.well-known/owners.json
+    status: 200
+    file: well-known/pathwren-owners.json
+    content_type: application/json
+    note: >-
+      verifymcp.io owners schema naming pathwren@tutamail.com as operator of every MCP server
+      on the host — the same address published in security.txt and in the apis.json contact.
+  - path: /.well-known/x402
+    status: 200
+    file: well-known/pathwren-x402.json
+    content_type: application/json
+    note: >-
+      x402 payment discovery declaring accepts:[] and configured:false — an explicit
+      "nothing here is paid", not a misconfigured rail.
+  - path: /.well-known/llms.txt
+    status: 200
+    file: llms/pathwren-llms.txt
+    content_type: text/plain
+    note: llms.txt also served from the well-known path; same document as /llms.txt.
+  - path: /.well-known/oauth-authorization-server
+    status: 404
+    file: null
+    note: >-
+      404 with a JSON body rather than an HTML shell — the provider documents this in
+      /.well-known/mcp.json x-authorization as a deliberate machine-readable refusal:
+      the API requires no authorization and never issues a 401.
+  - path: /.well-known/oauth-protected-resource
+    status: 404
+    file: null
+    note: 404 with a JSON body; same deliberate refusal as above.
+  - path: /.well-known/openid-configuration
+    status: 404
+    file: null
+    note: 404 with a JSON body; no OIDC surface.
+  - path: /.well-known/dnt-policy.txt
+    status: 404
+    file: null
+summary:
+  paths_probed: 14
+  served_200: 11
+  served_404: 3
+  html_shell_false_positives: 0

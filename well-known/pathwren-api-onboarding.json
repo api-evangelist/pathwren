@@ -1,0 +1,99 @@
+{
+ "$comment": "/.well-known/api-onboarding has no registered media type or schema; it is an API-discovery convention asking for the getting-started document a first-time caller needs. This is that, as JSON, generated with the rest of the site. The same information for a person is at https://www.pathwren.workers.dev/api.html, and for a model at https://www.pathwren.workers.dev/llms.txt.",
+ "name": "AI Crawler Index",
+ "description": "Every AI crawler on the web, what it is for, what blocking it costs you, and the IP ranges its operator publishes — as JSON, CSV, robots.txt and regex.",
+ "url": "https://www.pathwren.workers.dev/.well-known/api-onboarding",
+ "baseURL": "https://www.pathwren.workers.dev",
+ "documentation": "https://www.pathwren.workers.dev/api.html",
+ "openapi": "https://www.pathwren.workers.dev/openapi.json",
+ "apis_json": "https://www.pathwren.workers.dev/apis.json",
+ "modified": "2026-09-01",
+ "what_it_is": "A read-only index of 56 web crawlers and AI user agents from 30 operators: what each one is for, its exact robots.txt token and user-agent substring, whether its operator documents obeying robots.txt, how to verify it is genuine, and — the field nobody else publishes — what blocking it costs you. Plus 1887 IPv4 and 1056 IPv6 prefixes mirrored from 12 operator-published endpoints into one schema.",
+ "authentication": {
+  "required": false,
+  "type": "none",
+  "note": "There is no key, no token, no signup and no account. Send the GET."
+ },
+ "rate_limits": {
+  "per_client_limit": null,
+  "note": "None imposed by this API: every path is a static file on an edge cache, and no request is rejected for being frequent. The host's free plan allows 100,000 requests a day across the whole site, so the only real limit is that one — please fetch /data/agents.json once (about 300 KB, everything in it) rather than 56 per-crawler files, and remember the data changes at most every six hours, which /status.json tells you exactly.",
+  "conditional_requests": "Every response carries an ETag and honours If-None-Match with a 304. There is no Last-Modified header, so If-Modified-Since is ignored — revalidate on the ETag.",
+  "cors": "Access-Control-Allow-Origin: * on everything — callable straight from a browser."
+ },
+ "quickstart": [
+  {
+   "step": 1,
+   "what": "Identify a crawler you saw in your logs",
+   "curl": "curl -s https://www.pathwren.workers.dev/crawler/gptbot.json"
+  },
+  {
+   "step": 2,
+   "what": "Decide a policy and take the robots.txt for it",
+   "curl": "curl -s https://www.pathwren.workers.dev/robots/block-ai-training.txt >> robots.txt"
+  },
+  {
+   "step": 3,
+   "what": "Check that a request claiming to be a crawler came from its operator",
+   "curl": "curl -s https://www.pathwren.workers.dev/ip-ranges/all.json | jq -r '.ipv4[]' | head"
+  }
+ ],
+ "key_endpoints": [
+  {
+   "path": "/data/agents.json",
+   "method": "GET",
+   "returns": "application/json",
+   "what": "The whole dataset in one fetch: all 56 records, the category definitions and an endpoint map. Start here; almost every question is answered by this file alone.",
+   "curl": "curl -s https://www.pathwren.workers.dev/data/agents.json | jq '.crawlers[] | select(.category==\"ai-search\") | .robots_token'"
+  },
+  {
+   "path": "/ip-ranges/all.json",
+   "method": "GET",
+   "returns": "application/json",
+   "what": "Every crawler IP prefix the operators publish, 12 sources normalised into one schema with the upstream URL, the operator's own timestamp and a SHA-256 of the bytes received. This is the half that goes stale, and the reason to call again.",
+   "curl": "curl -s https://www.pathwren.workers.dev/ip-ranges/all.txt | wc -l"
+  },
+  {
+   "path": "/robots/{policy}.txt",
+   "method": "GET",
+   "returns": "text/plain",
+   "what": "A ready-to-append robots.txt for one of 8 stances (block-ai-training, allow-ai-search-only, maximum-ai-visibility, …), generated from the same records, so it never names a token that has changed.",
+   "curl": "curl -s https://www.pathwren.workers.dev/robots/allow-ai-search-only.txt"
+  }
+ ],
+ "formats": [
+  "application/json",
+  "text/csv",
+  "text/plain",
+  "text/markdown",
+  "application/rss+xml",
+  "application/feed+json"
+ ],
+ "also_available_as": {
+  "mcp_server": "https://www.pathwren.workers.dev/mcp",
+  "mcp_documentation": "https://www.pathwren.workers.dev/mcp.html",
+  "llms_txt": "https://www.pathwren.workers.dev/llms.txt",
+  "bulk_markdown": "https://www.pathwren.workers.dev/llms-full.txt"
+ },
+ "freshness": {
+  "rebuilt": "every 6 hours",
+  "status": "https://www.pathwren.workers.dev/status.json",
+  "changes": "https://www.pathwren.workers.dev/feed.json"
+ },
+ "errors": "404 with an HTML page listing the endpoints. There are no other error states: nothing here is stateful and nothing can be rate-limited away.",
+ "license": {
+  "data": "CC0-1.0",
+  "url": "https://creativecommons.org/publicdomain/zero/1.0/",
+  "attribution_required": false
+ },
+ "support": {
+  "corrections": "https://www.pathwren.workers.dev/.well-known/security.txt",
+  "email": "pathwren@tutamail.com",
+  "about": "https://www.pathwren.workers.dev/about.html"
+ },
+ "caveats": [
+  "A user-agent match is a claim, not a proof. Verify against /ip-ranges/ or reverse DNS.",
+  "Anthropic, Common Crawl, Meta and ByteDance publish no IP ranges; for those the user-agent is all there is, and the records say so rather than inventing one.",
+  "Training crawlers and AI-search crawlers are different bots with different tokens. Blocking them together is the common expensive mistake."
+ ],
+ "who_runs_it": "An independent, non-commercial automated project: it is run by software rather than by a person, and it says so wherever it introduces itself. It is not affiliated with, endorsed by or operated by any of the crawler operators it documents, nor by any other company. The category and cost-of-blocking fields are its own assessment and are labelled as such; every other field is cited to the operator's own documentation."
+}

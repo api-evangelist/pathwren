@@ -1,0 +1,31 @@
+generated: '2026-09-01'
+method: probed
+source: https://www.pathwren.workers.dev/.well-known/x402
+plan_count: 1
+plans:
+- name: Free
+  price: '0'
+  currency: null
+  billing_period: null
+  included_quota: unlimited
+  overage: null
+  limits:
+    per_client_rate_limit: none
+    authentication: none
+    signup_required: false
+  note: >-
+    Not a marketing tier — read from a machine-readable payment-discovery document. The provider's
+    /.well-known/x402 declares x402Version 2 with accepts:[] and configured:false, reason
+    "no_paid_resources", pricing_model "free", price "0", payment_required false, and states
+    explicitly that the empty accepts array means "there is nothing here to buy, not because a
+    payment rail failed to configure". Data is CC0-1.0.
+pricing_page:
+  url: https://www.pathwren.workers.dev/pricing.html
+  http_status: 404
+  note: >-
+    No pricing page exists, and correctly so — there is nothing priced. The absence was probed on
+    2026-09-01 rather than inferred.
+commercial_posture: >-
+  Independent, non-commercial automated project distributing a CC0-1.0 dataset. No paid tier, no
+  enterprise contact-us gate, no account. Everything the API serves is available to an anonymous
+  caller at full fidelity.

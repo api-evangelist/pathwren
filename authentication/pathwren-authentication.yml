@@ -1,0 +1,48 @@
+generated: '2026-09-01'
+method: searched
+source: https://www.pathwren.workers.dev/.well-known/api-onboarding
+docs: https://www.pathwren.workers.dev/api.html
+summary: >-
+  No authentication of any kind. The OpenAPI 3.1 document declares an empty
+  components.securitySchemes and no top-level security requirement; the provider's machine-readable
+  onboarding document states authentication.required=false, type "none", with the note "There is no
+  key, no token, no signup and no account. Send the GET."
+schemes: []
+scheme_count: 0
+anonymous_access: true
+evidence:
+- kind: openapi
+  url: https://www.pathwren.workers.dev/openapi.json
+  detail: components.securitySchemes is empty; no security[] on any of the 68 operations.
+- kind: onboarding
+  url: https://www.pathwren.workers.dev/.well-known/api-onboarding
+  http_status: 200
+  detail: 'authentication: {required: false, type: none}'
+- kind: plugin-manifest
+  url: https://www.pathwren.workers.dev/.well-known/ai-plugin.json
+  http_status: 200
+  detail: 'auth: {type: none}; api.is_user_authenticated false'
+- kind: probe
+  url: https://www.pathwren.workers.dev/data/agents.json
+  http_status: 200
+  detail: Unauthenticated GET returned 200 with the full 74KB payload and Access-Control-Allow-Origin:*.
+oauth:
+  present: false
+  detail: >-
+    Probed anonymously on 2026-09-01: /.well-known/oauth-authorization-server 404,
+    /.well-known/oauth-protected-resource 404, /.well-known/openid-configuration 404 — each with a
+    JSON body. The provider documents these as deliberate machine-readable refusals in
+    /.well-known/mcp.json (x-authorization): the servers never issue a 401 and never inspect an
+    Authorization header.
+mcp_authentication:
+  endpoints:
+  - https://www.pathwren.workers.dev/mcp
+  - https://www.pathwren.workers.dev/mcp/triage
+  - https://www.pathwren.workers.dev/mcp/doctor
+  required: false
+  verified: probed
+  detail: tools/list answered HTTP 200 on all three with no credential.
+a2a_authentication:
+  endpoint: https://www.pathwren.workers.dev/a2a
+  required: false
+  detail: The agent card declares no securitySchemes and no security requirement.

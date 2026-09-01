@@ -1,0 +1,1846 @@
+{
+ "openapi": "3.1.0",
+ "info": {
+  "title": "AI Crawler Index",
+  "version": "2026-09-01",
+  "summary": "Every AI crawler on the web, what it is for, what blocking it costs you, and the IP ranges its operator publishes — as JSON, CSV, robots.txt and regex.",
+  "description": "A read-only, static, keyless index of 56 web crawlers operated by 30 companies and projects: what each one is for, the exact robots.txt token and user-agent substring, whether the operator says it obeys robots.txt, how to verify it is genuine, and — the part nobody else publishes — what you lose by blocking it.\n\nEvery path below is a static file. There is no key, no rate limit and no state; `Access-Control-Allow-Origin: *` is set, so it is callable from a browser. Data is CC0.\n\nThe IP-range mirrors are refreshed from 12 operator-published endpoints; /status.json reports when each was last fetched and whether it changed.",
+  "license": {
+   "name": "CC0-1.0",
+   "url": "https://creativecommons.org/publicdomain/zero/1.0/"
+  },
+  "contact": {
+   "url": "https://www.pathwren.workers.dev/about.html"
+  }
+ },
+ "servers": [
+  {
+   "url": "https://www.pathwren.workers.dev"
+  }
+ ],
+ "tags": [
+  {
+   "name": "crawlers",
+   "description": "One record per crawler."
+  },
+  {
+   "name": "bulk",
+   "description": "The whole dataset in several shapes."
+  },
+  {
+   "name": "ip-ranges",
+   "description": "Operator-published prefixes, normalised."
+  },
+  {
+   "name": "robots",
+   "description": "Ready-made robots.txt policy files."
+  },
+  {
+   "name": "status",
+   "description": "Freshness of the upstream sources."
+  }
+ ],
+ "paths": {
+  "/data/agents.json": {
+   "get": {
+    "summary": "Every crawler record, plus categories and an endpoint map",
+    "operationId": "listCrawlers",
+    "tags": [
+     "bulk"
+    ],
+    "responses": {
+     "200": {
+      "description": "56 records",
+      "content": {
+       "application/json": {
+        "schema": {
+         "type": "object",
+         "properties": {
+          "count": {
+           "type": "integer"
+          },
+          "generated_at": {
+           "type": "string",
+           "format": "date-time"
+          },
+          "crawlers": {
+           "type": "array",
+           "items": {
+            "$ref": "#/components/schemas/Crawler"
+           }
+          }
+         }
+        },
+        "example": {
+         "count": 56,
+         "generated_at": "2026-09-01T11:48:49+00:00",
+         "crawlers": [
+          {
+           "slug": "oai-searchbot",
+           "name": "OAI-SearchBot",
+           "operator": "OpenAI",
+           "operator_slug": "openai",
+           "category": "ai-search",
+           "category_label": "AI search crawlers",
+           "robots_token": "OAI-SearchBot",
+           "user_agent_substring": "OAI-SearchBot",
+           "user_agent_example": "Mozilla/5.0 AppleWebKit/537.36 (KHTML, like Gecko); compatible; OAI-SearchBot/1.0; +https://openai.com/searchbot",
+           "respects_robots_txt": "documented",
+           "respects_robots_txt_label": "obeys robots.txt (documented)",
+           "verification_method": "published-ranges",
+           "verification_label": "published IP ranges",
+           "published_ip_ranges_url": "https://openai.com/searchbot.json",
+           "ip_ranges_endpoint": "https://www.pathwren.workers.dev/ip-ranges/openai-searchbot.json",
+           "ipv4_prefix_count": 35,
+           "ipv6_prefix_count": 0,
+           "what_it_is": "Builds the index ChatGPT search answers from. Content it collects is used for retrieval and citation, not for model training.",
+           "cost_of_blocking": "High. Blocking this removes you from ChatGPT search results and from the source links ChatGPT shows. This is the single most expensive block on this list for anyone who wants to be cited by an assistant.",
+           "operator_docs": "https://platform.openai.com/docs/bots",
+           "html_url": "https://www.pathwren.workers.dev/crawler/oai-searchbot.html",
+           "json_url": "https://www.pathwren.workers.dev/crawler/oai-searchbot.json",
+           "last_reviewed": "2026-09-01"
+          }
+         ]
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/crawler/{slug}.json": {
+   "get": {
+    "summary": "One crawler record by slug",
+    "description": "The same records as /data/agents.json, one file each, so a client can fetch exactly the one it needs.",
+    "operationId": "getCrawler",
+    "tags": [
+     "crawlers"
+    ],
+    "parameters": [
+     {
+      "name": "slug",
+      "in": "path",
+      "required": true,
+      "description": "Crawler slug, from /data/agents.json",
+      "schema": {
+       "type": "string",
+       "enum": [
+        "gptbot",
+        "oai-searchbot",
+        "chatgpt-user",
+        "claudebot",
+        "claude-searchbot",
+        "claude-user",
+        "anthropic-ai",
+        "claude-web",
+        "google-extended",
+        "googlebot",
+        "googleother",
+        "google-cloudvertexbot",
+        "google-inspectiontool",
+        "googlebot-image",
+        "googlebot-news",
+        "storebot-google",
+        "bingbot",
+        "applebot",
+        "applebot-extended",
+        "perplexitybot",
+        "perplexity-user",
+        "ccbot",
+        "bytespider",
+        "tiktokspider",
+        "meta-externalagent",
+        "meta-externalfetcher",
+        "facebookexternalhit",
+        "facebookbot",
+        "amazonbot",
+        "duckassistbot",
+        "duckduckbot",
+        "ai2bot",
+        "ai2bot-dolma",
+        "cohere-ai",
+        "cohere-training-data-crawler",
+        "mistralai-user",
+        "youbot",
+        "diffbot",
+        "omgilibot",
+        "omgili",
+        "webzio-extended",
+        "imagesiftbot",
+        "timpibot",
+        "semrushbot",
+        "semrushbot-ocob",
+        "ahrefsbot",
+        "archive-org-bot",
+        "ia-archiver",
+        "yandexbot",
+        "baiduspider",
+        "seznambot",
+        "yeti",
+        "petalbot",
+        "firecrawlagent",
+        "scrapy",
+        "img2dataset"
+       ]
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "The crawler record",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/Crawler"
+        },
+        "example": {
+         "slug": "gptbot",
+         "name": "GPTBot",
+         "operator": "OpenAI",
+         "operator_slug": "openai",
+         "category": "ai-training",
+         "category_label": "AI training crawlers",
+         "robots_token": "GPTBot",
+         "user_agent_substring": "GPTBot",
+         "user_agent_example": "Mozilla/5.0 AppleWebKit/537.36 (KHTML, like Gecko); compatible; GPTBot/1.2; +https://openai.com/gptbot",
+         "respects_robots_txt": "documented",
+         "respects_robots_txt_label": "obeys robots.txt (documented)",
+         "verification_method": "published-ranges",
+         "verification_label": "published IP ranges",
+         "published_ip_ranges_url": "https://openai.com/gptbot.json",
+         "ip_ranges_endpoint": "https://www.pathwren.workers.dev/ip-ranges/openai-gptbot.json",
+         "ipv4_prefix_count": 21,
+         "ipv6_prefix_count": 0,
+         "what_it_is": "OpenAI's bulk crawler. Pages it fetches may be used to train future OpenAI foundation models. It is not the bot that puts you in ChatGPT's search results, and blocking it does not remove you from them.",
+         "cost_of_blocking": "Your content is excluded from training data for future OpenAI models. No effect on ChatGPT search visibility, on citations, or on links a user pastes into ChatGPT.",
+         "operator_docs": "https://platform.openai.com/docs/bots",
+         "html_url": "https://www.pathwren.workers.dev/crawler/gptbot.html",
+         "json_url": "https://www.pathwren.workers.dev/crawler/gptbot.json",
+         "last_reviewed": "2026-09-01"
+        }
+       }
+      }
+     },
+     "404": {
+      "description": "No such crawler"
+     }
+    }
+   }
+  },
+  "/data/agents.csv": {
+   "get": {
+    "summary": "The same table as CSV",
+    "operationId": "listCrawlersCsv",
+    "tags": [
+     "bulk"
+    ],
+    "responses": {
+     "200": {
+      "description": "CSV with a header row",
+      "content": {
+       "text/csv": {
+        "schema": {
+         "type": "string"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/data/ua-regex.json": {
+   "get": {
+    "summary": "Pre-escaped user-agent regexes, whole-list and per category",
+    "operationId": "getUserAgentRegex",
+    "tags": [
+     "bulk"
+    ],
+    "responses": {
+     "200": {
+      "description": "Regex alternations",
+      "content": {
+       "application/json": {
+        "schema": {
+         "type": "object",
+         "properties": {
+          "all": {
+           "type": "string"
+          },
+          "ai_only": {
+           "type": "string"
+          },
+          "by_category": {
+           "type": "object",
+           "additionalProperties": {
+            "type": "string"
+           }
+          }
+         }
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/data/ip-sources.json": {
+   "get": {
+    "summary": "Which operators publish verifiable IP ranges, and where",
+    "operationId": "listIpSources",
+    "tags": [
+     "ip-ranges"
+    ],
+    "responses": {
+     "200": {
+      "description": "Source list",
+      "content": {
+       "application/json": {}
+      }
+     }
+    }
+   }
+  },
+  "/ip-ranges/all.json": {
+   "get": {
+    "summary": "Union of every operator-published prefix, grouped by source",
+    "operationId": "getAllIpRanges",
+    "tags": [
+     "ip-ranges"
+    ],
+    "responses": {
+     "200": {
+      "description": "1887 IPv4 and 1056 IPv6 prefixes",
+      "content": {
+       "application/json": {}
+      }
+     }
+    }
+   }
+  },
+  "/ip-ranges/all.txt": {
+   "get": {
+    "summary": "The same prefixes, one CIDR per line",
+    "tags": [
+     "ip-ranges"
+    ],
+    "operationId": "getAllIpRangesText",
+    "responses": {
+     "200": {
+      "description": "Plain text, # comments",
+      "content": {
+       "text/plain": {
+        "schema": {
+         "type": "string"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/ip-ranges/{source}.json": {
+   "get": {
+    "summary": "One operator's published prefix list, normalised",
+    "operationId": "getIpRangeSource",
+    "tags": [
+     "ip-ranges"
+    ],
+    "parameters": [
+     {
+      "name": "source",
+      "in": "path",
+      "required": true,
+      "description": "Source slug, from /data/ip-sources.json",
+      "schema": {
+       "type": "string",
+       "enum": [
+        "openai-gptbot",
+        "openai-searchbot",
+        "openai-chatgpt-user",
+        "google-googlebot",
+        "google-special",
+        "google-user-triggered",
+        "google-user-triggered-google",
+        "bing-bingbot",
+        "apple-applebot",
+        "duckduckgo-duckduckbot",
+        "perplexity-bot",
+        "perplexity-user"
+       ]
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "Prefixes with provenance",
+      "content": {
+       "application/json": {}
+      }
+     },
+     "404": {
+      "description": "No such source"
+     }
+    }
+   }
+  },
+  "/robots/{policy}.txt": {
+   "get": {
+    "summary": "A ready-made robots.txt policy file",
+    "operationId": "getRobotsPolicy",
+    "tags": [
+     "robots"
+    ],
+    "parameters": [
+     {
+      "name": "policy",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string",
+       "enum": [
+        "allow-all",
+        "block-ai-training",
+        "block-all-ai",
+        "block-datasets",
+        "allow-ai-search-only",
+        "block-seo-tools",
+        "block-disputed",
+        "maximum-ai-visibility"
+       ]
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "robots.txt fragment, ready to append",
+      "content": {
+       "text/plain": {
+        "schema": {
+         "type": "string"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/policy/{policy}.json": {
+   "get": {
+    "summary": "A policy with its rationale and the crawlers it names",
+    "operationId": "getPolicy",
+    "tags": [
+     "robots"
+    ],
+    "parameters": [
+     {
+      "name": "policy",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string",
+       "enum": [
+        "allow-all",
+        "block-ai-training",
+        "block-all-ai",
+        "block-datasets",
+        "allow-ai-search-only",
+        "block-seo-tools",
+        "block-disputed",
+        "maximum-ai-visibility"
+       ]
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "Policy record",
+      "content": {
+       "application/json": {}
+      }
+     }
+    }
+   }
+  },
+  "/status.json": {
+   "get": {
+    "summary": "Freshness and health of every upstream IP-range endpoint",
+    "operationId": "getStatus",
+    "tags": [
+     "status"
+    ],
+    "responses": {
+     "200": {
+      "description": "Per-source fetch state",
+      "content": {
+       "application/json": {
+        "schema": {
+         "type": "object",
+         "properties": {
+          "sources_ok": {
+           "type": "integer"
+          },
+          "sources_failed": {
+           "type": "integer"
+          },
+          "generated_at": {
+           "type": "string",
+           "format": "date-time"
+          }
+         }
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/feed.json": {
+   "get": {
+    "summary": "JSON Feed 1.1 of what changed",
+    "operationId": "getFeed",
+    "tags": [
+     "status"
+    ],
+    "responses": {
+     "200": {
+      "description": "JSON Feed",
+      "content": {
+       "application/feed+json": {}
+      }
+     }
+    }
+   }
+  },
+  "/crawler/gptbot.json": {
+   "get": {
+    "summary": "Record for GPTBot",
+    "operationId": "crawler_gptbot",
+    "tags": [
+     "crawlers"
+    ],
+    "description": "OpenAI's bulk crawler. Pages it fetches may be used to train future OpenAI foundation models. It is not the bot that puts you in ChatGPT's search results, and blocking it does not remove you from them.",
+    "responses": {
+     "200": {
+      "description": "The crawler record",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/Crawler"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/crawler/oai-searchbot.json": {
+   "get": {
+    "summary": "Record for OAI-SearchBot",
+    "operationId": "crawler_oai_searchbot",
+    "tags": [
+     "crawlers"
+    ],
+    "description": "Builds the index ChatGPT search answers from. Content it collects is used for retrieval and citation, not for model training.",
+    "responses": {
+     "200": {
+      "description": "The crawler record",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/Crawler"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/crawler/chatgpt-user.json": {
+   "get": {
+    "summary": "Record for ChatGPT-User",
+    "operationId": "crawler_chatgpt_user",
+    "tags": [
+     "crawlers"
+    ],
+    "description": "Fetches a single page at the moment a user or a ChatGPT agent asks for it — a pasted link, a browsing step, an Operator task. One human intent, one request. OpenAI states these fetches are not used for training.",
+    "responses": {
+     "200": {
+      "description": "The crawler record",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/Crawler"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/crawler/claudebot.json": {
+   "get": {
+    "summary": "Record for ClaudeBot",
+    "operationId": "crawler_claudebot",
+    "tags": [
+     "crawlers"
+    ],
+    "description": "Anthropic's bulk crawler, gathering pages that may be used to train Claude models.",
+    "responses": {
+     "200": {
+      "description": "The crawler record",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/Crawler"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/crawler/claude-searchbot.json": {
+   "get": {
+    "summary": "Record for Claude-SearchBot",
+    "operationId": "crawler_claude_searchbot",
+    "tags": [
+     "crawlers"
+    ],
+    "description": "Indexes pages so Claude's web search can find and cite them. Separate token from the training crawler, so search visibility and training consent are independent decisions.",
+    "responses": {
+     "200": {
+      "description": "The crawler record",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/Crawler"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/crawler/claude-user.json": {
+   "get": {
+    "summary": "Record for Claude-User",
+    "operationId": "crawler_claude_user",
+    "tags": [
+     "crawlers"
+    ],
+    "description": "Fetches a page because a Claude user asked Claude to read it, at that moment.",
+    "responses": {
+     "200": {
+      "description": "The crawler record",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/Crawler"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/crawler/anthropic-ai.json": {
+   "get": {
+    "summary": "Record for anthropic-ai",
+    "operationId": "crawler_anthropic_ai",
+    "tags": [
+     "crawlers"
+    ],
+    "description": "A legacy robots.txt token from before Anthropic consolidated on ClaudeBot. It is still widely present in robots.txt files and costs nothing to keep, but it is a control token rather than a bot you will see in logs.",
+    "responses": {
+     "200": {
+      "description": "The crawler record",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/Crawler"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/crawler/claude-web.json": {
+   "get": {
+    "summary": "Record for Claude-Web",
+    "operationId": "crawler_claude_web",
+    "tags": [
+     "crawlers"
+    ],
+    "description": "An earlier Anthropic token for user-facing web access, superseded by Claude-User and Claude-SearchBot. Kept here because it appears in most published robots.txt templates.",
+    "responses": {
+     "200": {
+      "description": "The crawler record",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/Crawler"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/crawler/google-extended.json": {
+   "get": {
+    "summary": "Record for Google-Extended",
+    "operationId": "crawler_google_extended",
+    "tags": [
+     "crawlers"
+    ],
+    "description": "Not a crawler. A robots.txt token that tells Google whether pages Googlebot already fetched may be used to train and ground Gemini. You will never see it in an access log; disallowing it changes what Google does with content it fetched under a different name.",
+    "responses": {
+     "200": {
+      "description": "The crawler record",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/Crawler"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/crawler/googlebot.json": {
+   "get": {
+    "summary": "Record for Googlebot",
+    "operationId": "crawler_googlebot",
+    "tags": [
+     "crawlers"
+    ],
+    "description": "The classic search crawler. It is also the crawler behind AI Overviews: Google does not run a separate bot for them, which is why the only AI opt-out is the Google-Extended token and not a Googlebot block.",
+    "responses": {
+     "200": {
+      "description": "The crawler record",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/Crawler"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/crawler/googleother.json": {
+   "get": {
+    "summary": "Record for GoogleOther",
+    "operationId": "crawler_googleother",
+    "tags": [
+     "crawlers"
+    ],
+    "description": "A generic fetcher used by Google product teams for one-off crawls and research, including data collection that does not belong to Search.",
+    "responses": {
+     "200": {
+      "description": "The crawler record",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/Crawler"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/crawler/google-cloudvertexbot.json": {
+   "get": {
+    "summary": "Record for Google-CloudVertexBot",
+    "operationId": "crawler_google_cloudvertexbot",
+    "tags": [
+     "crawlers"
+    ],
+    "description": "Crawls a site on behalf of a Vertex AI Agent Builder customer who is building an agent over that site. It only visits sites the customer has asked it to.",
+    "responses": {
+     "200": {
+      "description": "The crawler record",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/Crawler"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/crawler/google-inspectiontool.json": {
+   "get": {
+    "summary": "Record for Google-InspectionTool",
+    "operationId": "crawler_google_inspectiontool",
+    "tags": [
+     "crawlers"
+    ],
+    "description": "The fetcher behind Search Console's URL Inspection and the Rich Results Test. It runs when a site owner clicks a button.",
+    "responses": {
+     "200": {
+      "description": "The crawler record",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/Crawler"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/crawler/googlebot-image.json": {
+   "get": {
+    "summary": "Record for Googlebot-Image",
+    "operationId": "crawler_googlebot_image",
+    "tags": [
+     "crawlers"
+    ],
+    "description": "Image indexing for Google Images. A separate token so you can leave images out of search without leaving search.",
+    "responses": {
+     "200": {
+      "description": "The crawler record",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/Crawler"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/crawler/googlebot-news.json": {
+   "get": {
+    "summary": "Record for Googlebot-News",
+    "operationId": "crawler_googlebot_news",
+    "tags": [
+     "crawlers"
+    ],
+    "description": "A robots.txt token controlling inclusion in Google News. It does not have its own user-agent string; the fetch arrives as Googlebot.",
+    "responses": {
+     "200": {
+      "description": "The crawler record",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/Crawler"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/crawler/storebot-google.json": {
+   "get": {
+    "summary": "Record for Storebot-Google",
+    "operationId": "crawler_storebot_google",
+    "tags": [
+     "crawlers"
+    ],
+    "description": "Checks shopping and checkout flows for Google's shopping surfaces.",
+    "responses": {
+     "200": {
+      "description": "The crawler record",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/Crawler"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/crawler/bingbot.json": {
+   "get": {
+    "summary": "Record for bingbot",
+    "operationId": "crawler_bingbot",
+    "tags": [
+     "crawlers"
+    ],
+    "description": "Bing's only crawler, and therefore also the crawler behind Microsoft Copilot's grounding. Microsoft's documented way to keep search indexing while refusing generative reuse is the nocache / noarchive robots meta directive, not a separate user-agent.",
+    "responses": {
+     "200": {
+      "description": "The crawler record",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/Crawler"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/crawler/applebot.json": {
+   "get": {
+    "summary": "Record for Applebot",
+    "operationId": "crawler_applebot",
+    "tags": [
+     "crawlers"
+    ],
+    "description": "Powers Siri, Spotlight and Safari suggestions. Blocking it is a search decision, not an AI decision — the AI decision has its own token.",
+    "responses": {
+     "200": {
+      "description": "The crawler record",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/Crawler"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/crawler/applebot-extended.json": {
+   "get": {
+    "summary": "Record for Applebot-Extended",
+    "operationId": "crawler_applebot_extended",
+    "tags": [
+     "crawlers"
+    ],
+    "description": "Apple's counterpart to Google-Extended: a robots.txt token that withdraws consent for Apple Intelligence and Apple foundation-model training, without touching Applebot's search crawl.",
+    "responses": {
+     "200": {
+      "description": "The crawler record",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/Crawler"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/crawler/perplexitybot.json": {
+   "get": {
+    "summary": "Record for PerplexityBot",
+    "operationId": "crawler_perplexitybot",
+    "tags": [
+     "crawlers"
+    ],
+    "description": "Builds Perplexity's search index. Perplexity is citation-heavy by product design, so inclusion here converts to referral traffic more directly than most AI surfaces.",
+    "responses": {
+     "200": {
+      "description": "The crawler record",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/Crawler"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/crawler/perplexity-user.json": {
+   "get": {
+    "summary": "Record for Perplexity-User",
+    "operationId": "crawler_perplexity_user",
+    "tags": [
+     "crawlers"
+    ],
+    "description": "Fetches a page because a Perplexity user asked for it. Perplexity documents that this fetch is user-initiated and is therefore not governed by robots.txt — a robots rule will not stop it, by stated policy.",
+    "responses": {
+     "200": {
+      "description": "The crawler record",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/Crawler"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/crawler/ccbot.json": {
+   "get": {
+    "summary": "Record for CCBot",
+    "operationId": "crawler_ccbot",
+    "tags": [
+     "crawlers"
+    ],
+    "description": "Common Crawl's corpus builder. It trains nothing itself, but its archive is an input to most open and many closed LLM training sets, which makes it the highest-leverage single entry on this list.",
+    "responses": {
+     "200": {
+      "description": "The crawler record",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/Crawler"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/crawler/bytespider.json": {
+   "get": {
+    "summary": "Record for Bytespider",
+    "operationId": "crawler_bytespider",
+    "tags": [
+     "crawlers"
+    ],
+    "description": "ByteDance's crawler, associated with training data collection for Doubao and related models. Repeatedly reported by CDNs and site operators as the highest-volume AI crawler on the web and as inconsistent about robots.txt.",
+    "responses": {
+     "200": {
+      "description": "The crawler record",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/Crawler"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/crawler/tiktokspider.json": {
+   "get": {
+    "summary": "Record for TikTokSpider",
+    "operationId": "crawler_tiktokspider",
+    "tags": [
+     "crawlers"
+    ],
+    "description": "A second ByteDance crawler identifying with TikTok, collecting page content for the same family of models.",
+    "responses": {
+     "200": {
+      "description": "The crawler record",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/Crawler"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/crawler/meta-externalagent.json": {
+   "get": {
+    "summary": "Record for meta-externalagent",
+    "operationId": "crawler_meta_externalagent",
+    "tags": [
+     "crawlers"
+    ],
+    "description": "Meta's AI crawler, gathering training data for Llama and Meta AI. It replaced the older FacebookBot name for this purpose.",
+    "responses": {
+     "200": {
+      "description": "The crawler record",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/Crawler"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/crawler/meta-externalfetcher.json": {
+   "get": {
+    "summary": "Record for meta-externalfetcher",
+    "operationId": "crawler_meta_externalfetcher",
+    "tags": [
+     "crawlers"
+    ],
+    "description": "Fetches a page when a Meta AI user asks about a specific link.",
+    "responses": {
+     "200": {
+      "description": "The crawler record",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/Crawler"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/crawler/facebookexternalhit.json": {
+   "get": {
+    "summary": "Record for facebookexternalhit",
+    "operationId": "crawler_facebookexternalhit",
+    "tags": [
+     "crawlers"
+    ],
+    "description": "The link unfurler: it reads your Open Graph tags when somebody shares your URL on a Meta property.",
+    "responses": {
+     "200": {
+      "description": "The crawler record",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/Crawler"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/crawler/facebookbot.json": {
+   "get": {
+    "summary": "Record for FacebookBot",
+    "operationId": "crawler_facebookbot",
+    "tags": [
+     "crawlers"
+    ],
+    "description": "Meta's older speech- and language-corpus crawler, largely superseded by meta-externalagent but still listed as a valid robots token.",
+    "responses": {
+     "200": {
+      "description": "The crawler record",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/Crawler"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/crawler/amazonbot.json": {
+   "get": {
+    "summary": "Record for Amazonbot",
+    "operationId": "crawler_amazonbot",
+    "tags": [
+     "crawlers"
+    ],
+    "description": "Amazon's crawler, feeding Alexa's ability to answer questions from the web and Amazon's own search and assistant products.",
+    "responses": {
+     "200": {
+      "description": "The crawler record",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/Crawler"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/crawler/duckassistbot.json": {
+   "get": {
+    "summary": "Record for DuckAssistBot",
+    "operationId": "crawler_duckassistbot",
+    "tags": [
+     "crawlers"
+    ],
+    "description": "Fetches pages so DuckAssist can generate and cite answers inside DuckDuckGo.",
+    "responses": {
+     "200": {
+      "description": "The crawler record",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/Crawler"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/crawler/duckduckbot.json": {
+   "get": {
+    "summary": "Record for DuckDuckBot",
+    "operationId": "crawler_duckduckbot",
+    "tags": [
+     "crawlers"
+    ],
+    "description": "DuckDuckGo's own crawler. Note that the bulk of DuckDuckGo's web results come from Bing, so blocking bingbot removes you from DuckDuckGo whether or not you allow this one.",
+    "responses": {
+     "200": {
+      "description": "The crawler record",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/Crawler"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/crawler/ai2bot.json": {
+   "get": {
+    "summary": "Record for AI2Bot",
+    "operationId": "crawler_ai2bot",
+    "tags": [
+     "crawlers"
+    ],
+    "description": "The Allen Institute's crawler, gathering pages for open research corpora such as Dolma that underpin fully open models like OLMo.",
+    "responses": {
+     "200": {
+      "description": "The crawler record",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/Crawler"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/crawler/ai2bot-dolma.json": {
+   "get": {
+    "summary": "Record for Ai2Bot-Dolma",
+    "operationId": "crawler_ai2bot_dolma",
+    "tags": [
+     "crawlers"
+    ],
+    "description": "The variant of AI2's crawler named for the Dolma corpus specifically.",
+    "responses": {
+     "200": {
+      "description": "The crawler record",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/Crawler"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/crawler/cohere-ai.json": {
+   "get": {
+    "summary": "Record for cohere-ai",
+    "operationId": "crawler_cohere_ai",
+    "tags": [
+     "crawlers"
+    ],
+    "description": "Cohere's fetcher, used when its assistant products need a page.",
+    "responses": {
+     "200": {
+      "description": "The crawler record",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/Crawler"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/crawler/cohere-training-data-crawler.json": {
+   "get": {
+    "summary": "Record for cohere-training-data-crawler",
+    "operationId": "crawler_cohere_training_data_crawler",
+    "tags": [
+     "crawlers"
+    ],
+    "description": "Cohere's separately-named bulk crawler for model training data, split out so consent for training and consent for retrieval can differ.",
+    "responses": {
+     "200": {
+      "description": "The crawler record",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/Crawler"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/crawler/mistralai-user.json": {
+   "get": {
+    "summary": "Record for MistralAI-User",
+    "operationId": "crawler_mistralai_user",
+    "tags": [
+     "crawlers"
+    ],
+    "description": "Fetches a page when a Le Chat user asks Mistral's assistant to read it.",
+    "responses": {
+     "200": {
+      "description": "The crawler record",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/Crawler"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/crawler/youbot.json": {
+   "get": {
+    "summary": "Record for YouBot",
+    "operationId": "crawler_youbot",
+    "tags": [
+     "crawlers"
+    ],
+    "description": "You.com's crawler, feeding its AI search product and its search API.",
+    "responses": {
+     "200": {
+      "description": "The crawler record",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/Crawler"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/crawler/diffbot.json": {
+   "get": {
+    "summary": "Record for Diffbot",
+    "operationId": "crawler_diffbot",
+    "tags": [
+     "crawlers"
+    ],
+    "description": "Extracts structured records from pages to build a commercial knowledge graph that is resold and used for retrieval and training.",
+    "responses": {
+     "200": {
+      "description": "The crawler record",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/Crawler"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/crawler/omgilibot.json": {
+   "get": {
+    "summary": "Record for omgilibot",
+    "operationId": "crawler_omgilibot",
+    "tags": [
+     "crawlers"
+    ],
+    "description": "Webz.io's crawler, collecting web and forum text sold as datasets, including to model builders.",
+    "responses": {
+     "200": {
+      "description": "The crawler record",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/Crawler"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/crawler/omgili.json": {
+   "get": {
+    "summary": "Record for omgili",
+    "operationId": "crawler_omgili",
+    "tags": [
+     "crawlers"
+    ],
+    "description": "The older robots token for the same Webz.io collection, still honoured and still worth listing.",
+    "responses": {
+     "200": {
+      "description": "The crawler record",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/Crawler"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/crawler/webzio-extended.json": {
+   "get": {
+    "summary": "Record for Webzio-Extended",
+    "operationId": "crawler_webzio_extended",
+    "tags": [
+     "crawlers"
+    ],
+    "description": "Webz.io's opt-out token specifically for AI training reuse, in the pattern Google and Apple established.",
+    "responses": {
+     "200": {
+      "description": "The crawler record",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/Crawler"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/crawler/imagesiftbot.json": {
+   "get": {
+    "summary": "Record for ImagesiftBot",
+    "operationId": "crawler_imagesiftbot",
+    "tags": [
+     "crawlers"
+    ],
+    "description": "Crawls images for Hive AI's reverse-image and dataset products. Image-heavy sites see this one long before they see the text crawlers.",
+    "responses": {
+     "200": {
+      "description": "The crawler record",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/Crawler"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/crawler/timpibot.json": {
+   "get": {
+    "summary": "Record for Timpibot",
+    "operationId": "crawler_timpibot",
+    "tags": [
+     "crawlers"
+    ],
+    "description": "A distributed crawler building an independent search index outside the Google/Bing duopoly.",
+    "responses": {
+     "200": {
+      "description": "The crawler record",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/Crawler"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/crawler/semrushbot.json": {
+   "get": {
+    "summary": "Record for SemrushBot",
+    "operationId": "crawler_semrushbot",
+    "tags": [
+     "crawlers"
+    ],
+    "description": "Semrush's backlink and keyword crawler. It is not an AI crawler, but it is usually in the top three by volume on any site, and it is the cheapest block on this list.",
+    "responses": {
+     "200": {
+      "description": "The crawler record",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/Crawler"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/crawler/semrushbot-ocob.json": {
+   "get": {
+    "summary": "Record for SemrushBot-OCOB",
+    "operationId": "crawler_semrushbot_ocob",
+    "tags": [
+     "crawlers"
+    ],
+    "description": "Semrush's separately-tokenised crawler for its AI content tooling, split out so SEO crawling and AI reuse can be answered differently.",
+    "responses": {
+     "200": {
+      "description": "The crawler record",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/Crawler"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/crawler/ahrefsbot.json": {
+   "get": {
+    "summary": "Record for AhrefsBot",
+    "operationId": "crawler_ahrefsbot",
+    "tags": [
+     "crawlers"
+    ],
+    "description": "Ahrefs' backlink crawler, and one of the largest non-search crawlers on the web by request volume.",
+    "responses": {
+     "200": {
+      "description": "The crawler record",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/Crawler"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/crawler/archive-org-bot.json": {
+   "get": {
+    "summary": "Record for archive.org_bot",
+    "operationId": "crawler_archive_org_bot",
+    "tags": [
+     "crawlers"
+    ],
+    "description": "The Wayback Machine's crawler. Preservation rather than AI, but it lands in the same 'is this bot welcome' decision and its output is a public corpus.",
+    "responses": {
+     "200": {
+      "description": "The crawler record",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/Crawler"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/crawler/ia-archiver.json": {
+   "get": {
+    "summary": "Record for ia_archiver",
+    "operationId": "crawler_ia_archiver",
+    "tags": [
+     "crawlers"
+    ],
+    "description": "The legacy Alexa/Internet Archive token, still present in most robots.txt files and still occasionally honoured.",
+    "responses": {
+     "200": {
+      "description": "The crawler record",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/Crawler"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/crawler/yandexbot.json": {
+   "get": {
+    "summary": "Record for YandexBot",
+    "operationId": "crawler_yandexbot",
+    "tags": [
+     "crawlers"
+    ],
+    "description": "Yandex's search crawler, which also feeds Alice and Yandex's generative answers.",
+    "responses": {
+     "200": {
+      "description": "The crawler record",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/Crawler"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/crawler/baiduspider.json": {
+   "get": {
+    "summary": "Record for Baiduspider",
+    "operationId": "crawler_baiduspider",
+    "tags": [
+     "crawlers"
+    ],
+    "description": "Baidu's search crawler, and the ingest path for Baidu's Ernie-backed answers.",
+    "responses": {
+     "200": {
+      "description": "The crawler record",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/Crawler"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/crawler/seznambot.json": {
+   "get": {
+    "summary": "Record for SeznamBot",
+    "operationId": "crawler_seznambot",
+    "tags": [
+     "crawlers"
+    ],
+    "description": "Seznam's crawler — the dominant search engine in the Czech Republic and one of the few national engines with its own index.",
+    "responses": {
+     "200": {
+      "description": "The crawler record",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/Crawler"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/crawler/yeti.json": {
+   "get": {
+    "summary": "Record for Yeti",
+    "operationId": "crawler_yeti",
+    "tags": [
+     "crawlers"
+    ],
+    "description": "Naver's crawler. Naver is South Korea's largest search portal and runs its own index and its own generative answers.",
+    "responses": {
+     "200": {
+      "description": "The crawler record",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/Crawler"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/crawler/petalbot.json": {
+   "get": {
+    "summary": "Record for PetalBot",
+    "operationId": "crawler_petalbot",
+    "tags": [
+     "crawlers"
+    ],
+    "description": "Huawei's crawler for Petal Search, shipped as the default search on Huawei devices.",
+    "responses": {
+     "200": {
+      "description": "The crawler record",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/Crawler"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/crawler/firecrawlagent.json": {
+   "get": {
+    "summary": "Record for FirecrawlAgent",
+    "operationId": "crawler_firecrawlagent",
+    "tags": [
+     "crawlers"
+    ],
+    "description": "A hosted scrape-to-markdown service that LLM applications call to read pages. The requester is whoever is building on it, not Firecrawl itself, so volume and intent vary wildly.",
+    "responses": {
+     "200": {
+      "description": "The crawler record",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/Crawler"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/crawler/scrapy.json": {
+   "get": {
+    "summary": "Record for Scrapy",
+    "operationId": "crawler_scrapy",
+    "tags": [
+     "crawlers"
+    ],
+    "description": "Not an operator: the default user-agent of the most common Python crawling framework. Anyone can be behind it. Modern Scrapy obeys robots.txt by default, which is why the default UA is still worth a rule.",
+    "responses": {
+     "200": {
+      "description": "The crawler record",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/Crawler"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/crawler/img2dataset.json": {
+   "get": {
+    "summary": "Record for img2dataset",
+    "operationId": "crawler_img2dataset",
+    "tags": [
+     "crawlers"
+    ],
+    "description": "The tool used to turn image-URL lists such as LAION's into downloaded training sets. It is run by whoever is building a dataset, not by a single operator.",
+    "responses": {
+     "200": {
+      "description": "The crawler record",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/Crawler"
+        }
+       }
+      }
+     }
+    }
+   }
+  }
+ },
+ "components": {
+  "schemas": {
+   "Crawler": {
+    "type": "object",
+    "required": [
+     "slug",
+     "name",
+     "operator",
+     "category",
+     "robots_token"
+    ],
+    "properties": {
+     "slug": {
+      "type": "string",
+      "description": "Stable identifier used in URLs."
+     },
+     "name": {
+      "type": "string"
+     },
+     "operator": {
+      "type": "string"
+     },
+     "operator_slug": {
+      "type": "string"
+     },
+     "category": {
+      "type": "string",
+      "enum": [
+       "ai-search",
+       "ai-training",
+       "archive",
+       "dataset",
+       "preview",
+       "search",
+       "seo",
+       "tool",
+       "user-fetch"
+      ]
+     },
+     "robots_token": {
+      "type": "string",
+      "description": "Exact User-agent value for robots.txt."
+     },
+     "user_agent_substring": {
+      "type": "string",
+      "description": "Substring that reliably identifies it in a UA header. A match is a claim, not a proof."
+     },
+     "user_agent_example": {
+      "type": "string"
+     },
+     "respects_robots_txt": {
+      "type": "string",
+      "enum": [
+       "documented",
+       "by-design-no",
+       "disputed",
+       "n-a"
+      ]
+     },
+     "verification_method": {
+      "type": "string",
+      "enum": [
+       "published-ranges",
+       "reverse-dns",
+       "none"
+      ]
+     },
+     "published_ip_ranges_url": {
+      "type": [
+       "string",
+       "null"
+      ],
+      "format": "uri"
+     },
+     "ipv4_prefix_count": {
+      "type": "integer"
+     },
+     "ipv6_prefix_count": {
+      "type": "integer"
+     },
+     "what_it_is": {
+      "type": "string"
+     },
+     "cost_of_blocking": {
+      "type": "string",
+      "description": "What you lose by disallowing it. This index's own assessment, not the operator's."
+     },
+     "operator_docs": {
+      "type": "string",
+      "format": "uri"
+     },
+     "last_reviewed": {
+      "type": "string",
+      "format": "date"
+     }
+    }
+   }
+  }
+ }
+}

@@ -1,0 +1,98 @@
+generated: '2026-09-01'
+method: searched
+source: >-
+  https://www.pathwren.workers.dev/.well-known/api-onboarding and /api.html, cross-checked against
+  the OpenAPI 3.1 document and against live response headers observed on 2026-09-01.
+authentication:
+  style: none
+  detail: No key, token, signup or account. See authentication/pathwren-authentication.yml.
+  cross_ref: authentication/pathwren-authentication.yml
+idempotency:
+  supported: na
+  header: null
+  scope: null
+  retention: null
+  detail: >-
+    Not applicable rather than missing. All 68 operations are GET on static files; there is no
+    write surface, so there is nothing to double-fire and no idempotency key to accept. The MCP
+    servers declare the same thing structurally — every tool carries idempotentHint:true and
+    destructiveHint:false in its annotations.
+pagination:
+  style: none
+  detail: >-
+    No paging. The bulk endpoints return whole documents (/data/agents.json is ~74KB and holds all
+    56 records) and the provider's guidance is explicitly to fetch the one file rather than
+    iterate. The list_crawlers MCP tool accepts a `limit`, but it truncates rather than pages —
+    no cursor, offset or next-link is returned.
+field_expansion:
+  supported: false
+  detail: Records are served whole; no sparse-fieldset or expand parameter exists.
+metadata:
+  supported: false
+versioning:
+  style: none-in-path
+  detail: >-
+    No version segment and no version header. info.version is the build date. See
+    lifecycle/pathwren-lifecycle.yml.
+request_id_tracing:
+  provider_header: null
+  detail: >-
+    No first-party request id. Responses carry Cloudflare's cf-ray (edge trace id) and report-to /
+    nel headers, which are platform-level, not provider-level.
+error_envelope:
+  shape: mixed
+  detail: >-
+    Documented 404s on /crawler/{slug}.json and /ip-ranges/{source}.json carry no response schema
+    in the OpenAPI, and a live probe of https://www.pathwren.workers.dev/crawler/nope.json returned
+    404 text/html — a styled HTML page, not JSON. The three OAuth discovery paths return 404 with a
+    JSON body by design. So the host is deliberately machine-readable where an agent needs a reason
+    (authorization discovery) and human-readable where a person mistyped a slug.
+  cross_ref: errors/pathwren-problem-types.yml
+rate_limit_signaling:
+  headers: []
+  detail: No RateLimit-* or Retry-After headers; no limits imposed. See rate-limits/pathwren-rate-limits.yml.
+caching:
+  cache_control: public, max-age=3600
+  etag: true
+  if_none_match: true
+  returns_304: true
+  last_modified: false
+  detail: >-
+    Revalidate on the ETag; If-Modified-Since is ignored because no Last-Modified is sent. The
+    dataset changes at most every six hours and /status.json states exactly when.
+cors:
+  access_control_allow_origin: '*'
+  detail: Callable straight from a browser; confirmed on a live response.
+content_negotiation:
+  style: extension
+  detail: >-
+    Format is chosen by file extension rather than by Accept header — /data/agents.json vs
+    /data/agents.csv, /ip-ranges/all.json vs /ip-ranges/all.txt, /crawler/{slug}.json vs
+    /crawler/{slug}.md.
+dry_run_mode:
+  supported: na
+  detail: No write surface, so there is nothing to rehearse.
+reversibility:
+  grade: na
+  write_surface: false
+  reversal_operations: []
+  detail: >-
+    The API is read-only: 68 operations, all GET, on static files, with no request body accepted
+    anywhere and no state held (the MCP servers are stateless — no session id). There is no action
+    an agent can take here that could need taking back, so reversibility, dry-run and idempotency
+    are all `na` rather than zero.
+  evidence:
+  - kind: openapi
+    url: https://www.pathwren.workers.dev/openapi.json
+    detail: 68 operations, every one a GET; no requestBody on any path.
+  - kind: mcp-annotations
+    url: https://www.pathwren.workers.dev/mcp
+    detail: Every tool declares readOnlyHint:true and destructiveHint:false.
+  - kind: onboarding
+    url: https://www.pathwren.workers.dev/.well-known/api-onboarding
+    detail: '"There is no key, no rate limit and no state."'
+cross_refs:
+  errors: errors/pathwren-problem-types.yml
+  lifecycle: lifecycle/pathwren-lifecycle.yml
+  authentication: authentication/pathwren-authentication.yml
+  rate_limits: rate-limits/pathwren-rate-limits.yml

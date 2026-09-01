@@ -1,0 +1,21 @@
+generated: '2026-09-01'
+method: searched
+source: >-
+  Searched npm (registry.npmjs.org), PyPI, crates.io, RubyGems, pkg.go.dev, NuGet, Maven
+  Central and Packagist for "pathwren" / "ai-crawler-index", and read every outbound link on
+  https://www.pathwren.workers.dev/about.html, /api.html, /llms.txt and /.well-known/api-catalog.
+  The provider ships no client library in any language and names no first-party source
+  repository: the only GitHub link anywhere on the host is a credit to the third-party dataset
+  https://github.com/ai-robots-txt/ai.robots.txt, which is not theirs.
+package_count: 0
+packages: []
+note: >-
+  Deliberate absence rather than a gap. Every endpoint is an unauthenticated GET returning a
+  static JSON/CSV/text file with Access-Control-Allow-Origin:*, so the provider's own
+  quickstart is curl and fetch; there is nothing for an SDK to wrap. No SDKs pointer is
+  emitted, because none exists.
+distribution:
+- channel: direct-http
+  detail: static files served from https://www.pathwren.workers.dev, CC0-1.0 licensed
+- channel: mcp
+  detail: three remote MCP servers (see mcp/pathwren-mcp.yml) — no npx/stdio package published

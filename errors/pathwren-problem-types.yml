@@ -1,0 +1,53 @@
+generated: '2026-09-01'
+method: derived
+source: >-
+  Derived from the 4xx responses declared in https://www.pathwren.workers.dev/openapi.json, then
+  checked against live probes of the real error paths on 2026-09-01. No provider error reference
+  page exists to enrich from — the docs (/api.html) do not document error shapes.
+format: none
+rfc9457: false
+detail: >-
+  The API does not use application/problem+json. Only two of 68 operations declare a 4xx at all and
+  neither declares a response body schema, so there is no structured error contract to catalogue.
+  This is recorded as it is, not filled in.
+problem_types:
+- status: 404
+  operationIds: [getCrawler]
+  path: /crawler/{slug}.json
+  declared_description: Not found
+  observed:
+    url: https://www.pathwren.workers.dev/crawler/nope.json
+    http_status: 404
+    content_type: text/html
+    body_shape: styled HTML "Not found — AI Crawler Index" page
+  remediation: >-
+    An unknown crawler slug. Use GET /data/agents.json and match on the `slug` field, or call the
+    lookup_crawler MCP tool, which returns near matches instead of a 404.
+- status: 404
+  operationIds: [getIpRangeSource]
+  path: /ip-ranges/{source}.json
+  declared_description: No such source
+  observed:
+    note: Not probed with an invalid source; the declared 404 is taken from the spec only.
+  remediation: >-
+    Enumerate valid source slugs from GET /data/ip-sources.json or from the `sources[].slug` rows
+    in GET /status.json before templating this path.
+machine_readable_refusals:
+- paths:
+  - /.well-known/oauth-authorization-server
+  - /.well-known/oauth-protected-resource
+  - /.well-known/openid-configuration
+  status: 404
+  content_type: application/json
+  detail: >-
+    The one place this host answers an error in JSON, and deliberately. The provider documents it
+    in /.well-known/mcp.json x-authorization: "404 with a JSON body — the status is the answer, the
+    body is the reason." A 404 here means no authorization is required, not that discovery broke.
+gaps:
+- >-
+  The 4xx declared on getCrawler and getIpRangeSource carry no content or schema, so a client
+  cannot know from the contract what a failure body looks like.
+- >-
+  Error responses on the data paths are HTML, which an agent parsing JSON will not read. Adding
+  application/problem+json (RFC 9457) on the two declared 404s would close the only structural gap
+  in an otherwise unusually complete contract.

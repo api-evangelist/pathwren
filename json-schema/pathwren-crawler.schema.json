@@ -1,0 +1,99 @@
+{
+ "$schema": "https://json-schema.org/draft/2020-12/schema",
+ "$id": "https://www.pathwren.workers.dev/schemas/crawler.schema.json",
+ "title": "Crawler",
+ "description": "One crawler record from the Pathwren AI Crawler Index. Extracted verbatim from components.schemas.Crawler in the provider's own OpenAPI 3.1 document at https://www.pathwren.workers.dev/openapi.json (fetched 2026-09-01). No fields added or renamed.",
+ "type": "object",
+ "required": [
+  "slug",
+  "name",
+  "operator",
+  "category",
+  "robots_token"
+ ],
+ "properties": {
+  "slug": {
+   "type": "string",
+   "description": "Stable identifier used in URLs."
+  },
+  "name": {
+   "type": "string"
+  },
+  "operator": {
+   "type": "string"
+  },
+  "operator_slug": {
+   "type": "string"
+  },
+  "category": {
+   "type": "string",
+   "enum": [
+    "ai-search",
+    "ai-training",
+    "archive",
+    "dataset",
+    "preview",
+    "search",
+    "seo",
+    "tool",
+    "user-fetch"
+   ]
+  },
+  "robots_token": {
+   "type": "string",
+   "description": "Exact User-agent value for robots.txt."
+  },
+  "user_agent_substring": {
+   "type": "string",
+   "description": "Substring that reliably identifies it in a UA header. A match is a claim, not a proof."
+  },
+  "user_agent_example": {
+   "type": "string"
+  },
+  "respects_robots_txt": {
+   "type": "string",
+   "enum": [
+    "documented",
+    "by-design-no",
+    "disputed",
+    "n-a"
+   ]
+  },
+  "verification_method": {
+   "type": "string",
+   "enum": [
+    "published-ranges",
+    "reverse-dns",
+    "none"
+   ]
+  },
+  "published_ip_ranges_url": {
+   "type": [
+    "string",
+    "null"
+   ],
+   "format": "uri"
+  },
+  "ipv4_prefix_count": {
+   "type": "integer"
+  },
+  "ipv6_prefix_count": {
+   "type": "integer"
+  },
+  "what_it_is": {
+   "type": "string"
+  },
+  "cost_of_blocking": {
+   "type": "string",
+   "description": "What you lose by disallowing it. This index's own assessment, not the operator's."
+  },
+  "operator_docs": {
+   "type": "string",
+   "format": "uri"
+  },
+  "last_reviewed": {
+   "type": "string",
+   "format": "date"
+  }
+ }
+}

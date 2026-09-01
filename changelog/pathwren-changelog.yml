@@ -1,0 +1,45 @@
+generated: '2026-09-01'
+method: searched
+source: https://www.pathwren.workers.dev/changelog.html
+machine_readable:
+- url: https://www.pathwren.workers.dev/feed.json
+  format: JSON Feed 1.1
+  http_status: 200
+  items_at_fetch: 40
+- url: https://www.pathwren.workers.dev/feed.xml
+  format: RSS 2.0
+  http_status: 200
+- url: https://www.pathwren.workers.dev/status.json
+  format: JSON
+  http_status: 200
+  detail: per-source changed_since_last_fetch flags, the finest-grained change signal published.
+scheme: date
+current_version: '2026-09-01'
+entries:
+- version: '2026-09-01'
+  date: '2026-09-01'
+  breaking: false
+  additions:
+  - Index published — 56 crawlers, 30 operators, 8 robots.txt policies.
+  - 12 IP-range mirrors covering 1887 IPv4 and 1056 IPv6 prefixes.
+  highlights: >-
+    First dated entry on the human changelog. The site is new: apis.yml records created
+    2026-08-31, and the changelog holds exactly this one row.
+- version: '2026-09-01T11:48:49+00:00'
+  date: '2026-09-01'
+  breaking: false
+  source: feed.json
+  additions:
+  - 'Index rebuilt: 56 crawlers, 30 operators.'
+  - Eight robots.txt policy documents regenerated (allow-everything, block-ai-training, block-every-ai-crawler, block-corpus-and-dataset-builders and four more).
+- version: '2026-09-01T08:39:33+00:00'
+  date: '2026-09-01'
+  breaking: false
+  source: feed.json
+  additions:
+  - 'IP ranges refreshed: 12/12 sources, 1887 IPv4 + 1056 IPv6 prefixes.'
+note: >-
+  The changelog documents data changes, not contract changes — the provider says so on the page:
+  "Every rebuild stamps generated_at into agents.json and status.json; changes to an upstream
+  prefix list show up as changed_since_last_fetch per source." Recent window only; the feed
+  carried 40 items at fetch time, all dated 2026-09-01, because the index went live that week.

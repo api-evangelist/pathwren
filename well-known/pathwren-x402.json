@@ -1,0 +1,160 @@
+{
+  "x402Version": 2,
+  "accepts": [],
+  "configured": false,
+  "reason": "no_paid_resources",
+  "error": "No payment is required for anything on this host. `accepts` is empty because there is nothing here to buy, not because a payment rail failed to configure.",
+  "payment_required": false,
+  "pricing_model": "free",
+  "price": "0",
+  "everything_here_is_free": true,
+  "implemented": false,
+  "x402": {
+    "implements_protocol": false,
+    "ever_returns_402": false,
+    "emits_payment_required_header": false,
+    "reads_payment_signature_header": false,
+    "emits_payment_response_header": false,
+    "facilitator": null,
+    "settlement": null,
+    "payTo": null,
+    "wallet": null,
+    "asset": null,
+    "networks": [],
+    "schemes": [],
+    "extensions": {},
+    "note": "This host has no wallet, no facilitator and no paid resource. It is a static site and four read-only JSON-RPC endpoints behind a Cloudflare Worker. There is nothing for a payment to unlock, so no 402 is ever returned and no payment header is ever emitted or inspected."
+  },
+  "asked_about": "https://www.pathwren.workers.dev",
+  "not_a_payment_challenge": "This is a host-level statement, not a PaymentRequired response. It deliberately carries no top-level `resource` object, so it is not a valid 402 body and cannot be replayed as one. A real x402 challenge would arrive with HTTP status 402 on the protected resource itself.",
+  "resources": [
+    {
+      "url": "https://www.pathwren.workers.dev/mcp",
+      "price": "0",
+      "what": "MCP server (Streamable HTTP, JSON-RPC over POST) — the AI Crawler Index as six read-only tools",
+      "currency": null,
+      "payment": "none"
+    },
+    {
+      "url": "https://www.pathwren.workers.dev/mcp/triage",
+      "price": "0",
+      "what": "MCP server — a whole access log in, per-line crawler verdicts and a robots.txt/WAF ruleset out",
+      "currency": null,
+      "payment": "none"
+    },
+    {
+      "url": "https://www.pathwren.workers.dev/mcp/doctor",
+      "price": "0",
+      "what": "MCP server — which of 22 agent-discovery documents a host serves, and who was seen asking for each",
+      "currency": null,
+      "payment": "none"
+    },
+    {
+      "url": "https://www.pathwren.workers.dev/a2a",
+      "price": "0",
+      "what": "A2A (Agent2Agent) v1.0 agent, JSON-RPC over POST; card at /.well-known/agent-card.json",
+      "currency": null,
+      "payment": "none"
+    },
+    {
+      "url": "https://www.pathwren.workers.dev/data/agents.json",
+      "price": "0",
+      "what": "The whole crawler dataset — 56 crawlers, 30 operators — in one fetch",
+      "currency": null,
+      "payment": "none"
+    },
+    {
+      "url": "https://www.pathwren.workers.dev/ip-ranges/all.json",
+      "price": "0",
+      "what": "Union of every operator's published crawler IP prefixes, 1887 IPv4 + 1056 IPv6",
+      "currency": null,
+      "payment": "none"
+    },
+    {
+      "url": "https://www.pathwren.workers.dev/openapi.json",
+      "price": "0",
+      "what": "OpenAPI 3.1 description of the read-only HTTP API, 68 paths",
+      "currency": null,
+      "payment": "none"
+    },
+    {
+      "url": "https://www.pathwren.workers.dev/stats.json",
+      "price": "0",
+      "what": "This host's own external traffic, published live",
+      "currency": null,
+      "payment": "none"
+    },
+    {
+      "url": "https://www.pathwren.workers.dev/llms.txt",
+      "price": "0",
+      "what": "What this host is, for machines",
+      "currency": null,
+      "payment": "none"
+    }
+  ],
+  "authorization": {
+    "required": false,
+    "api_key": null,
+    "signup": null,
+    "quota": null,
+    "note": "No key, no signup, no quota, no rate limit tier to buy. Call the endpoints directly."
+  },
+  "about_this_path": {
+    "path": "/.well-known/x402",
+    "standardised": false,
+    "iana_registered": false,
+    "iana_registry": "https://www.iana.org/assignments/well-known-uris/well-known-uris.xhtml",
+    "iana_note": "Checked 2026-09-01: the IANA Well-Known URIs registry lists 114 suffixes and `x402` is not among them. (`agent-card.json` is, registered 2025-08-01 by the Linux Foundation.)",
+    "in_the_x402_specification": false,
+    "specification_note": "`/.well-known/x402` appears nowhere in coinbase/x402 — not in specs/, docs/, examples/ or e2e/. The protocol's own discovery mechanism is the `bazaar` extension: a resource server advertises its endpoint specification inside the `extensions` object of a real 402 response, and a facilitator catalogs it. Discovery lives on the facilitator's list endpoint, not on a well-known path of the seller.",
+    "so_what_is_it": "A de-facto convention used by payment-discovery crawlers to ask a host 'do you charge for anything, and on what rail'. It is a real question with a real answer, which is why this host answers it rather than 404ing — but a client should treat the presence of this file as a claim about pricing, never as evidence that a host implements x402. Read `implemented`.",
+    "convention_evidence": {
+      "note": "The crawler that asked this host for the document publishes one itself, and it is the honest-empty form. Quoted as the reason this document's first four keys are shaped the way they are.",
+      "host": "agenstry.com",
+      "path": "/.well-known/x402",
+      "observed": "2026-09-01T05:1xZ",
+      "body": {
+        "x402Version": 2,
+        "accepts": [],
+        "configured": false,
+        "reason": "production_facilitator_not_configured"
+      }
+    },
+    "specification": "https://github.com/coinbase/x402",
+    "specification_document": "https://github.com/coinbase/x402/blob/main/specs/x402-specification-v2.md",
+    "discovery_extension": "https://github.com/coinbase/x402/blob/main/specs/extensions/bazaar.md"
+  },
+  "what_an_entry_would_contain": {
+    "note": "If this host ever sold anything, each object in `accepts` would carry these fields — v2 PaymentRequired §5.1. Listed so the empty array is legible as 'none offered' rather than 'schema unknown'.",
+    "required_fields": [
+      "scheme",
+      "network",
+      "amount",
+      "asset",
+      "payTo",
+      "maxTimeoutSeconds"
+    ],
+    "and_the_402": "…and the protected resource itself would answer HTTP 402 with those requirements."
+  },
+  "if_this_ever_changes": "If any resource on this host ever requires payment, it will announce it where the protocol says to: HTTP 402 on the resource, with a PAYMENT-REQUIRED header, and a non-empty `accepts` here. Nothing is cached (cache-control: no-store), so re-asking is always current. There is no plan to charge for anything; the data is CC0.",
+  "the_same_statement_elsewhere": {
+    "human": "https://www.pathwren.workers.dev/security.html",
+    "machine": "https://www.pathwren.workers.dev/security.json",
+    "llms": "https://www.pathwren.workers.dev/llms.txt",
+    "onboarding": "https://www.pathwren.workers.dev/.well-known/api-onboarding",
+    "as_a_tool": "https://www.pathwren.workers.dev/mcp/doctor — POST tools/call explain_document {\"name\":\"x402\"} for the catalogue entry and the live list of who asked this host for it"
+  },
+  "observed_asking_this_host": [
+    {
+      "ua": "AgenstryBot/0.3.0 (+https://agenstry.com/bot)",
+      "at": "2026-09-01T04:28:51Z",
+      "accept": "application/json",
+      "took": "404 into this site's HTML error page — one request, one address. This document is the answer it did not get."
+    }
+  ],
+  "observed_note": "Rows from this host's own request log — the user-agent as it arrived, the UTC timestamp, and the status it took. Evidence about this host only, never a claim about your traffic.",
+  "independent": true,
+  "independence_note": "This host is operated independently. It is not affiliated with Coinbase, with the x402 project, or with any directory that indexes it.",
+  "license": "CC0-1.0",
+  "generated": "static document, served from the edge worker"
+}

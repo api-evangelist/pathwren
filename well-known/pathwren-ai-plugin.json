@@ -1,0 +1,18 @@
+{
+ "schema_version": "v1",
+ "name_for_human": "AI Crawler Index",
+ "name_for_model": "ai_crawler_index",
+ "description_for_human": "Identify any AI crawler by user-agent or IP, and get the robots.txt to match.",
+ "description_for_model": "Answer questions about web crawlers and AI user agents from the AI Crawler Index: 56 crawlers run by 30 operators, each with its robots.txt token, user-agent substring, whether the operator documents obeying robots.txt, how to verify it, what it is for, and what a site loses by blocking it. Also 1887 IPv4 and 1056 IPv6 prefixes mirrored from 12 operator-published endpoints every six hours, for checking whether a request claiming to be GPTBot or Googlebot came from an address its operator publishes. Start at /data/agents.json (the whole dataset), /crawler/{slug}.json (one record), /ip-ranges/all.json (verification prefixes) and /robots/{policy}.txt (a ready-made robots.txt for one of 8 stances). Every call is an unauthenticated GET; there is no key and no quota. Two things to tell the user: training crawlers and AI-search crawlers are different bots with different tokens, so blocking them together removes a site from AI search citations for nothing; and a user-agent match is a claim, not a proof — verify it against the published ranges. An independent, non-commercial automated project: it is run by software rather than by a person, and it says so wherever it introduces itself. It is not affiliated with, endorsed by or operated by any of the crawler operators it documents, nor by any other company. The category and cost-of-blocking fields are its own assessment and are labelled as such; every other field is cited to the operator's own documentation. Data is CC0.",
+ "auth": {
+  "type": "none"
+ },
+ "api": {
+  "type": "openapi",
+  "url": "https://www.pathwren.workers.dev/openapi.json",
+  "is_user_authenticated": false
+ },
+ "logo_url": "https://www.pathwren.workers.dev/icon.png",
+ "contact_email": "pathwren@tutamail.com",
+ "legal_info_url": "https://www.pathwren.workers.dev/about.html"
+}

@@ -1,0 +1,62 @@
+generated: '2026-09-01'
+method: searched
+source: >-
+  https://www.pathwren.workers.dev/changelog.html, /status.json, /feed.json and the OpenAPI
+  info.version field; all fetched 2026-09-01.
+versioning:
+  scheme: date
+  current_version: '2026-09-01'
+  detail: >-
+    OpenAPI info.version is the build date (2026-09-01), not a semantic version. There is no
+    version segment in any path and no version header: the contract is the same 68 GET operations
+    on every rebuild, and what changes is the data inside them. The MCP servers version
+    independently and semantically (ai-crawler-index 1.1.0, crawler-log-triage 1.0.0,
+    agent-discovery-doctor 1.0.0), as does the A2A agent card (1.0.0).
+  breaking_change_policy:
+    published: false
+    note: No stated policy for breaking changes to the path surface.
+deprecation:
+  policy_published: false
+  sunset_header: false
+  deprecation_header: false
+  rfc8594: false
+  deprecated_operations: []
+  detail: >-
+    The OpenAPI document marks no operation deprecated:true, and no deprecation or sunset policy is
+    published anywhere on the host. An honest absence — no Deprecation pointer is emitted.
+sla:
+  published: false
+  detail: >-
+    No availability commitment. The provider describes itself as an independent, non-commercial
+    automated project, and the status surface reports data freshness rather than uptime.
+status_page:
+  url: https://www.pathwren.workers.dev/status.html
+  http_status: 200
+  machine_readable: https://www.pathwren.workers.dev/status.json
+  detail: >-
+    A real, first-party status surface — but of the upstream data sources, not of this API's
+    availability. /status.json reports generated_at, checked_at, sources_total, sources_ok,
+    sources_failed, and a per-source row carrying the upstream URL, HTTP status, fetch time, the
+    operator's own source timestamp, prefix counts, a SHA-256 of the bytes received and
+    changed_since_last_fetch.
+  observed_2026_09_01:
+    sources_total: 12
+    sources_ok: 12
+    sources_failed: 0
+    crawlers_indexed: 56
+    operators_indexed: 30
+freshness:
+  rebuild_cadence: every six hours
+  last_build: '2026-09-01T11:48:49+00:00'
+  last_ip_refresh: '2026-09-01T08:39:33+00:00'
+  detail: >-
+    Freshness is the lifecycle signal that matters for this provider. The dataset is the product,
+    so /status.json and the change feeds are the deprecation mechanism: a robots token or prefix
+    list that changed upstream shows up as changed_since_last_fetch on its source row.
+change_feeds:
+- url: https://www.pathwren.workers.dev/feed.json
+  format: JSON Feed 1.1
+  http_status: 200
+- url: https://www.pathwren.workers.dev/feed.xml
+  format: RSS
+  http_status: 200

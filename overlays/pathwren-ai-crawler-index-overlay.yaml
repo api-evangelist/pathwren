@@ -1,0 +1,83 @@
+overlay: 1.0.0
+info:
+  title: API Evangelist enrichment overlay — Pathwren AI Crawler Index
+  version: 1.0.0
+extends: ../openapi/pathwren-ai-crawler-index-openapi.json
+x-generated: '2026-09-01'
+x-method: generated
+x-source: >-
+  Enhancements API Evangelist derived from artifacts in this repo. Applied as an Overlay so the
+  provider's own OpenAPI 3.1 document is never mutated. Every value below is sourced from a
+  document the provider publishes: /.well-known/api-onboarding, /.well-known/mcp.json,
+  /.well-known/agent-card.json, /.well-known/security.txt, /status.json and /llms.txt.
+actions:
+- target: $.info
+  description: Record the licence, contact and independence posture the provider states elsewhere but does not carry in info.
+  update:
+    x-license-spdx: CC0-1.0
+    x-independent: >-
+      Independent, non-commercial automated project. Not affiliated with, endorsed by or operated
+      by any crawler operator it documents. Category and cost-of-blocking fields are the project's
+      own labelled assessment; every other field is cited to the operator's own documentation.
+    x-onboarding: https://www.pathwren.workers.dev/.well-known/api-onboarding
+    x-api-catalog: https://www.pathwren.workers.dev/.well-known/api-catalog
+- target: $
+  description: Surface the agent-facing protocols that sit beside this REST contract.
+  update:
+    x-mcp-servers:
+    - name: dev.workers.pathwren.www/ai-crawler-index
+      url: https://www.pathwren.workers.dev/mcp
+      transport: streamable-http
+      tools: 6
+    - name: dev.workers.pathwren.www/crawler-log-triage
+      url: https://www.pathwren.workers.dev/mcp/triage
+      transport: streamable-http
+      tools: 5
+    - name: dev.workers.pathwren.www/agent-discovery-doctor
+      url: https://www.pathwren.workers.dev/mcp/doctor
+      transport: streamable-http
+      tools: 5
+    x-a2a-agent-card: https://www.pathwren.workers.dev/.well-known/agent-card.json
+    x-llms-txt: https://www.pathwren.workers.dev/llms.txt
+- target: $
+  description: Declare the runtime semantics observed on live responses and documented in api-onboarding.
+  update:
+    x-runtime:
+      authentication: none
+      rate_limits:
+        per_client_limit: null
+        note: >-
+          No per-client limit is imposed; the platform account allows 100,000 requests a day
+          across the whole site.
+      conditional_requests:
+        etag: true
+        if_none_match: true
+        last_modified: false
+      cors:
+        access_control_allow_origin: '*'
+      cache_control: public, max-age=3600
+      write_operations: 0
+      reversibility: na
+- target: $.info
+  description: Record data freshness, which is the only thing that changes about this contract.
+  update:
+    x-freshness:
+      rebuild_cadence: every six hours
+      status_endpoint: https://www.pathwren.workers.dev/status.json
+      change_feed:
+      - https://www.pathwren.workers.dev/feed.json
+      - https://www.pathwren.workers.dev/feed.xml
+      observed_2026_09_01:
+        crawlers_indexed: 56
+        operators_indexed: 30
+        sources_total: 12
+        sources_ok: 12
+        unique_ipv4_prefixes: 1887
+        unique_ipv6_prefixes: 1056
+- target: $.tags
+  description: Note that the spec pre-expands one operationId per crawler slug alongside the templated operation.
+  update:
+    x-note: >-
+      Beyond the five declared tags, the document enumerates 56 fixed per-crawler operationIds
+      (crawler_gptbot, crawler_claudebot, …) that duplicate the templated getCrawler operation
+      at GET /crawler/{slug}.json. They are the same resource, listed for spec readers.

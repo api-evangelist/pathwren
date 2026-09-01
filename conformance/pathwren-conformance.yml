@@ -1,0 +1,162 @@
+generated: '2026-09-01'
+method: probed
+source: >-
+  Asserted from documents this provider actually serves, each fetched on 2026-09-01, plus the
+  OpenAPI 3.1 contract. Nothing below is claimed from a marketing page.
+standards:
+- id: openapi-3.1
+  conforms: true
+  evidence:
+    url: https://www.pathwren.workers.dev/openapi.json
+    http_status: 200
+    detail: 'openapi: 3.1.0, 68 operations, components.schemas.Crawler, five declared tags.'
+- id: swagger-2.0
+  conforms: true
+  evidence:
+    url: https://www.pathwren.workers.dev/swagger.json
+    http_status: 200
+    detail: >-
+      A parallel Swagger 2.0 rendering of the same 68 paths (host www.pathwren.workers.dev,
+      basePath /) published alongside the 3.1 document for older tooling.
+- id: apis-json-1.0
+  conforms: true
+  evidence:
+    url: https://www.pathwren.workers.dev/apis.json
+    http_status: 200
+    detail: First-party APIs.json 1.0 record; it is the `url` in this repo's apis.yml.
+- id: rfc9727-api-catalog
+  conforms: true
+  evidence:
+    url: https://www.pathwren.workers.dev/.well-known/api-catalog
+    http_status: 200
+    content_type: application/linkset+json
+    detail: >-
+      Real RFC 9727 catalog served as an RFC 9264 linkset with service-desc, service-doc,
+      service-meta, item and describedby relations — not an HTML shell.
+- id: rfc9116-security-txt
+  conforms: true
+  evidence:
+    url: https://www.pathwren.workers.dev/.well-known/security.txt
+    http_status: 200
+    detail: Contact, Expires (2027-09-01), Preferred-Languages, Canonical and Policy all present.
+- id: mcp
+  conforms: true
+  evidence:
+    url: https://www.pathwren.workers.dev/mcp
+    http_status: 200
+    detail: >-
+      Streamable HTTP, JSON-RPC 2.0, stateless. tools/list answered anonymously with six tools,
+      each carrying a full inputSchema and readOnly/destructive/idempotent/openWorld annotations.
+      Advertises protocol versions 2026-07-28 back to 2024-11-05. Three servers on this host, each
+      with its own official MCP Registry record mirrored verbatim.
+- id: a2a-1.0
+  conforms: true
+  evidence:
+    url: https://www.pathwren.workers.dev/.well-known/agent-card.json
+    http_status: 200
+    detail: >-
+      Agent card grades conformant against A2A 1.0.0 — capabilities is an object, protocolVersion
+      present, skills is an array, and the optional preferredTransport / defaultInputModes /
+      defaultOutputModes are all present. Also served at the legacy /.well-known/agent.json.
+- id: llms-txt
+  conforms: true
+  evidence:
+    url: https://www.pathwren.workers.dev/llms.txt
+    http_status: 200
+    detail: >-
+      Correct llms.txt form — single H1, blockquote summary, H2 sections of `- [name](url): notes`.
+      Also served at /.well-known/llms.txt.
+- id: json-feed-1.1
+  conforms: true
+  evidence:
+    url: https://www.pathwren.workers.dev/feed.json
+    http_status: 200
+    content_type: application/feed+json
+- id: rss-2.0
+  conforms: true
+  evidence:
+    url: https://www.pathwren.workers.dev/feed.xml
+    http_status: 200
+    content_type: application/rss+xml
+- id: x402
+  conforms: false
+  evidence:
+    url: https://www.pathwren.workers.dev/.well-known/x402
+    http_status: 200
+    detail: >-
+      Serves the discovery document but explicitly does not implement the protocol —
+      implements_protocol false, ever_returns_402 false, accepts:[] with reason "no_paid_resources".
+      Recorded as a declared non-implementation rather than a gap.
+- id: oauth2
+  conforms: false
+  evidence:
+    url: https://www.pathwren.workers.dev/.well-known/oauth-authorization-server
+    http_status: 404
+    detail: No OAuth. Deliberate — the API requires no authorization and never issues a 401.
+- id: oidc
+  conforms: false
+  evidence:
+    url: https://www.pathwren.workers.dev/.well-known/openid-configuration
+    http_status: 404
+- id: rfc9457-problem-details
+  conforms: false
+  evidence:
+    url: https://www.pathwren.workers.dev/crawler/nope.json
+    http_status: 404
+    detail: 404 returns text/html, not application/problem+json. See errors/pathwren-problem-types.yml.
+- id: idempotency
+  conforms: na
+  evidence:
+    detail: Read-only API — 68 GET operations, no write surface. Nothing to make idempotent.
+- id: pagination
+  conforms: na
+  evidence:
+    detail: Bulk documents are served whole by design; no paging contract exists or is needed.
+- id: http-conditional-requests
+  conforms: true
+  evidence:
+    url: https://www.pathwren.workers.dev/data/agents.json
+    http_status: 200
+    detail: >-
+      ETag present on live responses and If-None-Match honoured with a 304, per
+      /.well-known/api-onboarding. No Last-Modified, so If-Modified-Since is ignored — stated
+      rather than left for a client to discover.
+domain_standards:
+- id: robots-exclusion-protocol-rfc9309
+  conforms: true
+  role: subject-and-emitter
+  evidence:
+    url: https://www.pathwren.workers.dev/robots/block-ai-training.txt
+    spec_location: 'openapi.json paths./robots/{policy}.txt (operationId getRobotsPolicy), tag "robots"'
+    detail: >-
+      The domain standard for this provider's market IS the Robots Exclusion Protocol, and the
+      contract declares it structurally rather than claiming it in prose: a templated operation
+      emitting ready-to-paste robots.txt for eight named stances, a matching
+      /policy/{policy}.json describing each stance, and a `robots_token` plus
+      `respects_robots_txt` field on every record in components.schemas.Crawler. A consumer who
+      already speaks robots.txt needs no bespoke connector — the response body IS the standard's
+      own wire format.
+- id: user-agent-identification
+  conforms: true
+  role: emitter
+  evidence:
+    spec_location: 'components.schemas.Crawler.user_agent_substring / user_agent_example; openapi.json paths./data/ua-regex.json'
+    detail: >-
+      Publishes pre-escaped user-agent regex per category at /data/ua-regex.json and a
+      one-per-line substring list at /data/user-agents.txt — the operational form bot-management
+      tooling consumes directly.
+- id: operator-published-ip-range-verification
+  conforms: true
+  role: aggregator
+  evidence:
+    url: https://www.pathwren.workers.dev/ip-ranges/all.json
+    spec_location: 'openapi.json paths./ip-ranges/all.json (getAllIpRanges) and /data/ip-sources.json (listIpSources)'
+    detail: >-
+      Normalises the de-facto verification convention — Google/OpenAI/Anthropic-style published
+      crawler prefix files — from 12 operator endpoints into one schema carrying the upstream URL,
+      the operator's own timestamp and a SHA-256 of the bytes received. 1887 IPv4 and 1056 IPv6
+      prefixes at the 2026-09-01 build.
+note: >-
+  There is no formal standards body for AI-crawler identification, so the reward-only
+  domain_standard slot is filled by the three de-facto conventions this market actually runs on,
+  each evidenced at a specific location in the contract. Nothing was invented to fill it.

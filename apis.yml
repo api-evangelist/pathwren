@@ -1,56 +1,170 @@
+aid: pathwren
 name: AI Crawler Index
-description: >-
-  A read-only, keyless reference dataset describing AI/web crawlers — including robots.txt tokens, user-agent
-  substrings, operator documentation, robots.txt compliance, verification methods, and mirrored operator-published IP
-  ranges normalized into one schema with provenance and SHA-256 checksums. Covers 56 crawlers from 30 operators across 9
-  categories. Data licensed CC0-1.0.
-url: https://raw.githubusercontent.com/api-evangelist/ai-crawler-index/refs/heads/main/apis.yml
+type: Index
+description: 'Every AI crawler on the web, what it is for, what blocking it costs you, and the IP ranges its operator publishes
+  — as JSON, CSV, robots.txt and regex. 56 crawlers from 30 operators, 1887 IPv4 and 1056 IPv6 prefixes mirrored from 12 operator-published
+  endpoints and refreshed every six hours. Read-only static files: no key, no signup, no rate limit, CORS open, CC0.'
+image: https://www.pathwren.workers.dev/icon.png
+url: https://www.pathwren.workers.dev/apis.json
+specificationVersion: '1.0'
 created: '2026-08-31'
-modified: '2026-08-31'
-specificationVersion: '0.21'
+modified: '2026-09-01'
 tags:
-  - ai-crawlers
-  - robots.txt
-  - user-agents
-  - bot-management
-  - ip-ranges
-  - web-scraping
-  - ai-agents
-  - open-data
-  - security
-  - reference-dataset
-  - llms.txt
-apis:
-  - name: AI Crawler Index API
-    description: >-
-      Keyless, CORS-open, read-only HTTP API serving JSON/CSV/TXT reference data about AI/web crawlers, operators,
-      categories, robots.txt policies, IP ranges, and detection primitives.
-    humanURL: https://www.pathwren.workers.dev/api.html
-    baseURL: https://www.pathwren.workers.dev
-    tags:
-      - ai-crawlers
-      - robots.txt
-      - user-agents
-      - bot-management
-      - ip-ranges
-      - web-scraping
-      - ai-agents
-      - open-data
-      - security
-      - reference-dataset
-      - llms.txt
-    properties:
-      - type: OpenAPI
-        url: https://www.pathwren.workers.dev/openapi.json
-      - type: Documentation
-        url: https://www.pathwren.workers.dev/api.html
-      - type: LLMsTxt
-        url: https://www.pathwren.workers.dev/llms.txt
+- AI crawlers
+- web crawlers
+- robots.txt
+- user agents
+- bot detection
+- GPTBot
+- ClaudeBot
+- crawler IP ranges
+- llms.txt
+- open data
 maintainers:
-  - FN: AI Crawler Index
-    url: https://www.pathwren.workers.dev/
-generated:
-  by: apis.io/add
-  model: claude-opus-4-8
-  confidence: 98
-  at: '2026-08-31T21:22:22.857Z'
+- FN: Pathwren
+  email: pathwren@tutamail.com
+  url: https://www.pathwren.workers.dev/about.html
+apis:
+- aid: www.pathwren.workers.dev:ai-crawler-index
+  name: AI Crawler Index
+  description: 'Which crawler a User-Agent header belongs to, who operates it, whether it documents obeying robots.txt, how
+    to verify it is genuine against the operator''s own published IP ranges, and what blocking it costs you. Every endpoint
+    is a GET returning JSON, CSV or plain text.
+
+
+    HOST NOTE: the entire surface is served from www.pathwren.workers.dev, a Cloudflare Workers default subdomain rather than
+    a custom domain. That is NOT an ephemeral tunnel -- unlike a trycloudflare quick tunnel, a workers.dev subdomain is stable
+    and tied to the account -- but it is a platform-owned address, so the operator does not control it and it cannot be moved.
+    Recorded rather than treated as disqualifying: everything it serves is real and complete. Verified 2026-09-01.'
+  image: https://www.pathwren.workers.dev/icon.png
+  humanURL: https://www.pathwren.workers.dev/api.html?s=ai-crawler-index&c=apis-json
+  baseURL: https://www.pathwren.workers.dev
+  tags:
+  - AI crawlers
+  - web crawlers
+  - robots.txt
+  - user agents
+  - bot detection
+  - GPTBot
+  - ClaudeBot
+  - crawler IP ranges
+  - llms.txt
+  - open data
+  properties:
+  - type: OpenAPI
+    url: https://www.pathwren.workers.dev/openapi.json
+  - type: x-openapi-yaml
+    url: https://www.pathwren.workers.dev/openapi.yaml
+  - type: Swagger
+    url: https://www.pathwren.workers.dev/swagger.json
+  - type: Documentation
+    url: https://www.pathwren.workers.dev/api.html
+  - type: Feed
+    url: https://www.pathwren.workers.dev/feed.xml
+  - type: Feed
+    url: https://www.pathwren.workers.dev/feed.json
+  - type: x-mcp-server
+    url: https://www.pathwren.workers.dev/mcp
+  - type: x-mcp-manifest
+    url: https://www.pathwren.workers.dev/.well-known/mcp.json
+  - type: x-onboarding
+    url: https://www.pathwren.workers.dev/.well-known/api-onboarding
+  - type: x-plugin-manifest
+    url: https://www.pathwren.workers.dev/.well-known/ai-plugin.json
+  - type: x-api-catalog
+    url: https://www.pathwren.workers.dev/.well-known/api-catalog
+  - type: x-llms-txt
+    url: https://www.pathwren.workers.dev/llms.txt
+  - type: x-bulk-data
+    url: https://www.pathwren.workers.dev/data/agents.json
+  - type: x-ip-ranges
+    url: https://www.pathwren.workers.dev/ip-ranges/all.json
+  - type: x-security-txt
+    url: https://www.pathwren.workers.dev/.well-known/security.txt
+  - type: x-sitemap
+    url: https://www.pathwren.workers.dev/sitemap.xml
+  - type: StatusPage
+    url: https://www.pathwren.workers.dev/status.html
+  - type: License
+    url: https://creativecommons.org/publicdomain/zero/1.0/
+  - type: MCPServer
+    url: https://www.pathwren.workers.dev/mcp
+    description: Mirrored from the provider's own x-mcp-server property so the canonical reader sees it. Verified 2026-09-01.
+  - type: OpenAPI
+    url: openapi/pathwren-ai-crawler-index-openapi.json
+    description: Verbatim copy of the provider's OpenAPI 3.1 document, fetched 2026-09-01 (HTTP 200).
+  - type: Overlay
+    url: overlays/pathwren-ai-crawler-index-overlay.yaml
+  - type: JSONSchema
+    url: json-schema/pathwren-crawler.schema.json
+  - type: Authentication
+    url: authentication/pathwren-authentication.yml
+  - type: Conventions
+    url: conventions/pathwren-conventions.yml
+  - type: ErrorCatalog
+    url: errors/pathwren-problem-types.yml
+  - type: RateLimits
+    url: rate-limits/pathwren-rate-limits.yml
+  - type: DataModel
+    url: data-model/pathwren-data-model.yml
+  - type: ToolCrosswalk
+    url: mcp/pathwren-tool-crosswalk.yml
+  - type: GettingStarted
+    url: https://www.pathwren.workers.dev/.well-known/api-onboarding
+  - type: APIReference
+    url: https://www.pathwren.workers.dev/api.html
+  - type: ChangeLog
+    url: https://www.pathwren.workers.dev/changelog.html
+  contact:
+  - FN: Pathwren
+    email: pathwren@tutamail.com
+    url: https://www.pathwren.workers.dev/about.html
+common:
+- type: DomainSecurity
+  url: security/pathwren-domain-security.yml
+- type: VulnerabilityDisclosure
+  url: security/pathwren-vulnerability-disclosure.yml
+common:
+- type: DeveloperPortal
+  url: https://www.pathwren.workers.dev/
+- type: Documentation
+  url: https://www.pathwren.workers.dev/api.html
+- type: Support
+  url: https://www.pathwren.workers.dev/about.html
+- type: License
+  url: https://creativecommons.org/publicdomain/zero/1.0/
+- type: StatusPage
+  url: https://www.pathwren.workers.dev/status.html
+- type: ChangeLog
+  url: changelog/pathwren-changelog.yml
+- type: WellKnown
+  url: well-known/pathwren-well-known.yml
+- type: SecurityTxt
+  url: well-known/pathwren-security.txt
+- type: Security
+  url: security/pathwren-vulnerability-disclosure.yml
+- type: VulnerabilityDisclosure
+  url: security/pathwren-vulnerability-disclosure.yml
+- type: DomainSecurity
+  url: security/pathwren-domain-security.yml
+- type: LLMsTxt
+  url: llms/pathwren-llms.txt
+- type: MCPServer
+  url: mcp/pathwren-mcp.yml
+- type: AgentCard
+  url: a2a/pathwren-a2a.yml
+- type: AgentSkill
+  url: skills/_index.yml
+- type: Packages
+  url: packages/pathwren-packages.yml
+- type: Conformance
+  url: conformance/pathwren-conformance.yml
+- type: Lifecycle
+  url: lifecycle/pathwren-lifecycle.yml
+- type: Plans
+  url: plans/pathwren-plans-pricing.yml
+x-enrichment:
+  date: '2026-09-01'
+  status: enriched
+  artifacts_added: 38
+  pass: local-v1

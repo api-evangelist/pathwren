@@ -1,0 +1,51 @@
+generated: '2026-09-01'
+method: probed
+source: https://www.pathwren.workers.dev/.well-known/api-onboarding
+docs: https://www.pathwren.workers.dev/api.html
+limit_count: 0
+limits: []
+summary: >-
+  The provider publishes no per-client rate limit and imposes none. Every path is a static file on
+  an edge cache; no request is rejected for frequency. This is a documented zero, not an
+  undocumented gap.
+response_headers:
+  rate_limit_headers: []
+  observed_on: https://www.pathwren.workers.dev/data/agents.json
+  observed_at: '2026-09-01'
+  http_status: 200
+  headers_present:
+  - name: etag
+    value_shape: '"91b0edb6bae9194dcb7366c01be064e5"'
+  - name: cache-control
+    value: public, max-age=3600
+  - name: cf-cache-status
+    value: HIT
+  - name: access-control-allow-origin
+    value: '*'
+  - name: strict-transport-security
+    value: max-age=31536000; includeSubDomains
+  note: >-
+    No X-RateLimit-*, no RateLimit-*, no Retry-After on a 200. Probed live rather than assumed.
+exhaustion:
+  status_code: null
+  detail: >-
+    The API defines no exhaustion response. The provider names the only real ceiling honestly in
+    /.well-known/api-onboarding: the host's platform account allows 100,000 requests a day across
+    the whole site, and beyond that the platform, not the API, refuses.
+fair_use_guidance:
+  stated: true
+  url: https://www.pathwren.workers.dev/.well-known/api-onboarding
+  detail: >-
+    "Please fetch /data/agents.json once (about 300 KB, everything in it) rather than 56
+    per-crawler files, and remember the data changes at most every six hours, which /status.json
+    tells you exactly."
+conditional_requests:
+  etag: true
+  if_none_match: true
+  returns_304: true
+  last_modified: false
+  if_modified_since: ignored
+  detail: >-
+    Stated verbatim in api-onboarding: "Every response carries an ETag and honours If-None-Match
+    with a 304. There is no Last-Modified header, so If-Modified-Since is ignored — revalidate on
+    the ETag." Consistent with the live headers observed above.

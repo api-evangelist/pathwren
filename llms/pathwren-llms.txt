@@ -1,0 +1,245 @@
+# AI Crawler Index
+
+> Every AI crawler on the web, what it is for, what blocking it costs you, and the IP ranges its operator publishes — as JSON, CSV, robots.txt and regex.
+
+56 crawlers, 30 operators, 1887 IPv4 and
+1056 IPv6 prefixes mirrored from 12 endpoints the
+operators publish themselves. Static files, no key, no rate limit, CORS open, CC0.
+Rebuilt 2026-09-01.
+
+The question this exists to answer: *which of these do I allow, and what do I lose if I
+do not?* Operators document that a bot exists. They do not document what blocking it
+costs you. Every record here carries that, in one field, in plain language.
+
+## Start here
+
+- [All 56 crawlers](/data/agents.json): the whole dataset, one file.
+- [Who actually crawls this host](/bot/index.html): 72 named clients — bots,
+  registry probes, trust scanners and liveness checkers — one page each, generated
+  from this host's own request log: the exact user-agent, first and last seen, how
+  many addresses it came from, the paths it asked for in order, the status codes it
+  got, and what it asked for that did not exist. Window 2026-08-31T20:58:11+00:00 to
+  2026-09-01T06:16:32+00:00 UTC. Most of these names are documented nowhere else on
+  the web. Whole set in one request:
+  [/data/observed-clients.json](/data/observed-clients.json), flat table at
+  [/data/observed-clients.csv](/data/observed-clients.csv).
+- [Ready-made robots.txt](/policy/index.html): eight policies, each a file you can curl.
+- [Published IP ranges](/ip-ranges/all.json): every operator prefix list, one schema.
+- [Upstream status](/status.json): which operator endpoints answered, and when.
+- [OpenAPI 3.1](/openapi.json): every read endpoint, described.
+
+## Machine endpoints
+
+- [/data/agents.json](/data/agents.json): every record, with categories and an endpoint map.
+- [/data/agents.csv](/data/agents.csv): the same table, flat.
+- [/data/user-agents.txt](/data/user-agents.txt): user-agent substrings, one per line.
+- [/data/robots-tokens.txt](/data/robots-tokens.txt): robots.txt tokens, one per line.
+- [/data/ua-regex.json](/data/ua-regex.json): pre-escaped regex, whole-list and per category.
+- [/data/ip-sources.json](/data/ip-sources.json): which operators publish ranges, and where.
+- [/ip-ranges/all.txt](/ip-ranges/all.txt): every published CIDR, one per line, for a WAF.
+- [/status.json](/status.json): freshness of every upstream source.
+- [/crawler/<slug>.json](/crawler/gptbot.json): one record per crawler.
+- [/crawler/<slug>.md](/crawler/gptbot.md): the same record as markdown, one file each.
+- [/policy/<slug>.json](/policy/block-ai-training.json) and [/robots/<slug>.txt](/robots/block-ai-training.txt).
+- [/feed.json](/feed.json), [/feed.xml](/feed.xml): what changed.
+- [/mcp](/mcp.html): the same data as an MCP server (Streamable HTTP, no key, six tools).
+  If you are an agent that speaks MCP, connect to `https://www.pathwren.workers.dev/mcp` and call `tools/list`.
+- [/mcp/triage](/mcp-triage.html): a second MCP server, `https://www.pathwren.workers.dev/mcp/triage`. It takes a whole
+  access log and returns per-line verdicts, the impersonators, and a robots.txt or WAF ruleset
+  for exactly what was in it. No tool in common with /mcp — different input, different job.
+- [/mcp/doctor](/mcp-doctor.html): a third MCP server, `https://www.pathwren.workers.dev/mcp/doctor`. It checks which of
+  the 22 discovery documents agents actually ask for — llms.txt, agent card, owners.json, oauth
+  metadata, mcp.json, apis.json — a host serves, names who asks for each missing one, validates
+  a pasted llms.txt or agent card, and drafts an llms.txt from a sitemap. It refuses to check
+  this host or any private one.
+- [/a2a](/a2a.html): the same six skills as an A2A (Agent2Agent) v1.0 agent — JSON-RPC 2.0
+  over POST, no key. Agent card at [/.well-known/agent-card.json](/.well-known/agent-card.json),
+  identical bytes at the legacy [/.well-known/agent.json](/.well-known/agent.json) and from
+  `GET /a2a`. No streaming, no push notifications, no task store: `SendMessage` answers with
+  a `Message` rather than inventing a task id, and the card declares each of those false.
+
+
+## Every client observed asking this host for something
+
+One page each, generated from the request log. `not observed` means exactly that: we publish what we measured and never a guess, and nothing here is a claim about intent.
+
+- [ClaudeBot](/bot/claudebot.html) ([json](/bot/claudebot.json), [md](/bot/claudebot.md)): `Mozilla/5.0 AppleWebKit/537.36 (KHTML, like Gecko; compatible; ClaudeBot/1.0; +claudebot@a` — 504 request(s) from 2 address(es), 2026-09-01T00:46:32Z to 2026-09-01T06:15:19Z.
+- [archive.org_bot](/bot/archive-org-bot.html) ([json](/bot/archive-org-bot.json), [md](/bot/archive-org-bot.md)): `Mozilla/5.0 (compatible; archive.org_bot +http://archive.org/details/archive.org_bot) Zeno` — 327 request(s) from 2 address(es), 2026-08-31T20:58:34Z to 2026-09-01T03:00:09Z.
+- [YandexBot](/bot/yandexbot.html) ([json](/bot/yandexbot.json), [md](/bot/yandexbot.md)): `Mozilla/5.0 (compatible; YandexBot/3.0; +http://yandex.com/bots)` — 71 request(s) from 65 address(es), 2026-08-31T20:58:12Z to 2026-09-01T06:16:32Z.
+- [AgentGrade](/bot/agentgrade.html) ([json](/bot/agentgrade.json), [md](/bot/agentgrade.md)): `AgentGrade/1.0 (security research; agentgrade.net)` — 67 request(s) from 1 address(es), 2026-09-01T02:53:17Z to 2026-09-01T02:53:29Z.
+- [SentinelOracle](/bot/sentineloracle.html) ([json](/bot/sentineloracle.json), [md](/bot/sentineloracle.md)): `SentinelOracle/0.1 (+https://glimind.com/opt-out; liveness-only, never invokes tools)` — 45 request(s) from 1 address(es), 2026-09-01T01:24:24Z to 2026-09-01T06:13:32Z.
+- [node](/bot/node.html) ([json](/bot/node.json), [md](/bot/node.md)): `node` — 37 request(s) from 13 address(es), 2026-08-31T22:49:52Z to 2026-09-01T06:16:12Z.
+- [AgentDisco](/bot/agentdisco.html) ([json](/bot/agentdisco.json), [md](/bot/agentdisco.md)): `AgentDisco/1.0 (+https://agentdisco.io/bot)` — 30 request(s) from 1 address(es), 2026-09-01T02:28:30Z to 2026-09-01T02:28:41Z.
+- [mcpbeat](/bot/mcpbeat.html) ([json](/bot/mcpbeat.json), [md](/bot/mcpbeat.md)): `mcpbeat/0.1 (+https://mcpbeat.com/bot/; liveness check)` — 22 request(s) from 1 address(es), 2026-09-01T01:43:38Z to 2026-09-01T06:12:16Z.
+- [Orbit-MCP-Registry-IconResolver](/bot/orbit-mcp-registry-iconresolver.html) ([json](/bot/orbit-mcp-registry-iconresolver.json), [md](/bot/orbit-mcp-registry-iconresolver.md)): `Orbit-MCP-Registry-IconResolver/1.0` — 18 request(s) from 4 address(es), 2026-08-31T22:09:49Z to 2026-09-01T00:38:25Z.
+- [apis.io-submit](/bot/apis-io-submit.html) ([json](/bot/apis-io-submit.json), [md](/bot/apis-io-submit.md)): `apis.io-submit/1.0 (+https://apis.io)` — 13 request(s) from 2 address(es), 2026-08-31T21:21:01Z to 2026-08-31T21:23:53Z.
+- [python-httpx2](/bot/python-httpx2.html) ([json](/bot/python-httpx2.json), [md](/bot/python-httpx2.md)): `python-httpx2/2.12.0` — 12 request(s) from 2 address(es), 2026-08-31T22:15:20Z to 2026-09-01T02:49:04Z.
+- [GuzzleHttp](/bot/guzzlehttp.html) ([json](/bot/guzzlehttp.json), [md](/bot/guzzlehttp.md)): `GuzzleHttp/7` — 10 request(s) from 4 address(es), 2026-08-31T22:09:48Z to 2026-09-01T05:04:08Z.
+- [GolemreachTrustBot](/bot/golemreachtrustbot.html) ([json](/bot/golemreachtrustbot.json), [md](/bot/golemreachtrustbot.md)): `GolemreachTrustBot/0.1 (+https://golemreach.com/trust/bot)` — 9 request(s) from 1 address(es), 2026-09-01T00:48:12Z to 2026-09-01T05:49:08Z.
+- [402explorer](/bot/402explorer.html) ([json](/bot/402explorer.json), [md](/bot/402explorer.md)): `402explorer/0.1 (+https://discover.paygent.net/about)` — 8 request(s) from 1 address(es), 2026-09-01T04:08:29Z to 2026-09-01T05:18:37Z.
+- [A2A-Registry-HealthCheck](/bot/a2a-registry-healthcheck.html) ([json](/bot/a2a-registry-healthcheck.json), [md](/bot/a2a-registry-healthcheck.md)): `A2A-Registry-HealthCheck/1.0` — 8 request(s) from 2 address(es), 2026-09-01T02:52:12Z to 2026-09-01T06:01:36Z.
+- [bingbot](/bot/bingbot.html) ([json](/bot/bingbot.json), [md](/bot/bingbot.md)): `Mozilla/5.0 AppleWebKit/537.36 (KHTML, like Gecko; compatible; bingbot/2.0; +http://www.bi` — 8 request(s) from 6 address(es), 2026-08-31T20:58:11Z to 2026-09-01T01:55:09Z.
+- [Mozilla](/bot/mozilla.html) ([json](/bot/mozilla.json), [md](/bot/mozilla.md)): `Mozilla/5.0` — 8 request(s) from 3 address(es), 2026-09-01T02:49:36Z to 2026-09-01T02:56:57Z.
+- [undici](/bot/undici.html) ([json](/bot/undici.json), [md](/bot/undici.md)): `undici` — 8 request(s) from 3 address(es), 2026-09-01T00:36:09Z to 2026-09-01T03:21:12Z.
+- [AgentTrust-Monitor](/bot/agenttrust-monitor.html) ([json](/bot/agenttrust-monitor.json), [md](/bot/agenttrust-monitor.md)): `AgentTrust-Monitor/1.0 (+https://agenttrust.site/methodology)` — 7 request(s) from 1 address(es), 2026-09-01T03:08:31Z to 2026-09-01T06:14:31Z.
+- [Deno](/bot/deno.html) ([json](/bot/deno.json), [md](/bot/deno.md)): `Deno/2.1.4 (variant; SupabaseEdgeRuntime/1.74.3)` — 7 request(s) from 6 address(es), 2026-08-31T22:30:06Z to 2026-09-01T02:34:00Z.
+- [AgenstryBot](/bot/agenstrybot.html) ([json](/bot/agenstrybot.json), [md](/bot/agenstrybot.md)): `AgenstryBot/0.3.0 (+https://agenstry.com/bot)` — 6 request(s) from 1 address(es), 2026-09-01T04:28:51Z to 2026-09-01T04:28:51Z.
+- [exaforce-mcprep](/bot/exaforce-mcprep.html) ([json](/bot/exaforce-mcprep.json), [md](/bot/exaforce-mcprep.md)): `exaforce-mcprep/0.1 (MCP server reputation scanner)` — 6 request(s) from 2 address(es), 2026-08-31T22:32:28Z to 2026-09-01T03:23:58Z.
+- [hultra-link](/bot/hultra-link.html) ([json](/bot/hultra-link.json), [md](/bot/hultra-link.md)): `hultra-link/1.0 (+https://donnees.hultra.link/sondes.md)` — 6 request(s) from 2 address(es), 2026-08-31T22:10:04Z to 2026-09-01T03:10:04Z.
+- [MCPWatch](/bot/mcpwatch.html) ([json](/bot/mcpwatch.json), [md](/bot/mcpwatch.md)): `MCPWatch/0.1.0 (+mcpwatch@iyre.com) longitudinal MCP security research` — 6 request(s) from 1 address(es), 2026-09-01T03:49:49Z to 2026-09-01T03:50:30Z.
+- [movanas-registry-snapshot](/bot/movanas-registry-snapshot.html) ([json](/bot/movanas-registry-snapshot.json), [md](/bot/movanas-registry-snapshot.md)): `movanas-registry-snapshot` — 6 request(s) from 1 address(es), 2026-08-31T22:43:36Z to 2026-08-31T23:06:09Z.
+- [ProofBench](/bot/proofbench.html) ([json](/bot/proofbench.json), [md](/bot/proofbench.md)): `ProofBench/0.1 (+https://proofbench.dev/about/probe; MCP registry health probe)` — 6 request(s) from 1 address(es), 2026-08-31T22:17:01Z to 2026-09-01T05:48:07Z.
+- [Go-http-client](/bot/go-http-client.html) ([json](/bot/go-http-client.json), [md](/bot/go-http-client.md)): `Go-http-client/2.0` — 5 request(s) from 1 address(es), 2026-08-31T23:00:06Z to 2026-09-01T04:11:39Z.
+- [io.verifymcp](/bot/io-verifymcp.html) ([json](/bot/io-verifymcp.json), [md](/bot/io-verifymcp.md)): `io.verifymcp/probe` — 5 request(s) from 1 address(es), 2026-08-31T23:00:06Z to 2026-09-01T04:11:39Z.
+- [lastseen-schema-probe](/bot/lastseen-schema-probe.html) ([json](/bot/lastseen-schema-probe.json), [md](/bot/lastseen-schema-probe.md)): `lastseen-schema-probe/1.0 (+https://lastseen.dev; introspection-only)` — 5 request(s) from 1 address(es), 2026-09-01T06:12:51Z to 2026-09-01T06:12:52Z.
+- [mcp-registry](/bot/mcp-registry.html) ([json](/bot/mcp-registry.json), [md](/bot/mcp-registry.md)): `mcp-registry/1.0` — 5 request(s) from 2 address(es), 2026-08-31T22:02:23Z to 2026-09-01T02:29:08Z.
+- [VerifyMCP-OwnersBot](/bot/verifymcp-ownersbot.html) ([json](/bot/verifymcp-ownersbot.json), [md](/bot/verifymcp-ownersbot.md)): `VerifyMCP-OwnersBot/1.0 (+https://verifymcp.io/docs/build/owners-json)` — 5 request(s) from 1 address(es), 2026-08-31T23:12:20Z to 2026-09-01T04:12:18Z.
+- [agent-tools.cloud-crawler](/bot/agent-tools-cloud-crawler.html) ([json](/bot/agent-tools-cloud-crawler.json), [md](/bot/agent-tools-cloud-crawler.md)): `agent-tools.cloud-crawler/0.1 (+https://agent-tools.cloud)` — 4 request(s) from 1 address(es), 2026-09-01T03:55:53Z to 2026-09-01T04:10:46Z.
+- [AgentIndexBot](/bot/agentindexbot.html) ([json](/bot/agentindexbot.json), [md](/bot/agentindexbot.md)): `AgentIndexBot/0.1 (+https://agents.traderszone.net; polite ARD crawler)` — 4 request(s) from 1 address(es), 2026-09-01T04:07:21Z to 2026-09-01T04:26:51Z.
+- [AgentReputationBot](/bot/agentreputationbot.html) ([json](/bot/agentreputationbot.json), [md](/bot/agentreputationbot.md)): `AgentReputationBot/1.0 (+https://agentreputation.dev)` — 3 request(s) from 1 address(es), 2026-09-01T03:47:16Z to 2026-09-01T03:47:36Z.
+- [Enerlio](/bot/enerlio.html) ([json](/bot/enerlio.json), [md](/bot/enerlio.md)): `Enerlio GmbH FACTANKER marc@enerlio.de` — 3 request(s) from 1 address(es), 2026-09-01T01:07:45Z to 2026-09-01T01:07:47Z.
+- [GPTBot](/bot/gptbot.html) ([json](/bot/gptbot.json), [md](/bot/gptbot.md)): `Mozilla/5.0 AppleWebKit/537.36 (KHTML, like Gecko; compatible; GPTBot/1.4; +https://openai` — 3 request(s) from 2 address(es), 2026-09-01T05:23:47Z to 2026-09-01T05:28:35Z.
+- [mcp-checker](/bot/mcp-checker.html) ([json](/bot/mcp-checker.json), [md](/bot/mcp-checker.md)): `mcp-checker/1.0` — 3 request(s) from 1 address(es), 2026-09-01T05:31:12Z to 2026-09-01T05:31:19Z.
+- [mcp-observatory](/bot/mcp-observatory.html) ([json](/bot/mcp-observatory.json), [md](/bot/mcp-observatory.md)): `mcp-observatory/0.1.0 (+https://github.com/yhouta/mcp-observatory; public transparency log` — 3 request(s) from 1 address(es), 2026-09-01T03:08:29Z to 2026-09-01T03:08:30Z.
+- [mcp-schema-archive](/bot/mcp-schema-archive.html) ([json](/bot/mcp-schema-archive.json), [md](/bot/mcp-schema-archive.md)): `mcp-schema-archive/1.0 (+https://mcp-schema-archive.delfrost42.workers.dev)` — 3 request(s) from 1 address(es), 2026-09-01T03:37:27Z to 2026-09-01T03:37:27Z.
+- [MCPCatalogSync](/bot/mcpcatalogsync.html) ([json](/bot/mcpcatalogsync.json), [md](/bot/mcpcatalogsync.md)): `Mozilla/5.0 (compatible; MCPCatalogSync/1.0)` — 3 request(s) from 3 address(es), 2026-09-01T01:36:35Z to 2026-09-01T01:54:15Z.
+- [measure-mcp-schema](/bot/measure-mcp-schema.html) ([json](/bot/measure-mcp-schema.json), [md](/bot/measure-mcp-schema.md)): `measure-mcp-schema/0.1.0` — 3 request(s) from 1 address(es), 2026-09-01T03:33:48Z to 2026-09-01T03:33:48Z.
+- [utopian-foundry-probe](/bot/utopian-foundry-probe.html) ([json](/bot/utopian-foundry-probe.json), [md](/bot/utopian-foundry-probe.md)): `utopian-foundry-probe/1.0` — 3 request(s) from 1 address(es), 2026-09-01T06:12:38Z to 2026-09-01T06:12:39Z.
+- [x402-observatory](/bot/x402-observatory.html) ([json](/bot/x402-observatory.json), [md](/bot/x402-observatory.md)): `x402-observatory/0.2 (+research collector; contact: 300tsb@gmail.com)` — 3 request(s) from 1 address(es), 2026-09-01T06:13:13Z to 2026-09-01T06:13:13Z.
+- [a2a-directory-liveness](/bot/a2a-directory-liveness.html) ([json](/bot/a2a-directory-liveness.json), [md](/bot/a2a-directory-liveness.md)): `a2a-directory-liveness` — 2 request(s) from 1 address(es), 2026-09-01T02:27:27Z to 2026-09-01T02:27:27Z.
+- [A2A-Registry-Smoke](/bot/a2a-registry-smoke.html) ([json](/bot/a2a-registry-smoke.json), [md](/bot/a2a-registry-smoke.md)): `A2A-Registry-Smoke/1.0 (+https://a2aregistry.org)` — 2 request(s) from 1 address(es), 2026-09-01T02:25:59Z to 2026-09-01T02:25:59Z.
+- [AetherLink-Public-Discovery-Evidence](/bot/aetherlink-public-discovery-evidence.html) ([json](/bot/aetherlink-public-discovery-evidence.json), [md](/bot/aetherlink-public-discovery-evidence.md)): `AetherLink-Public-Discovery-Evidence/1.0` — 2 request(s) from 1 address(es), 2026-09-01T04:00:04Z to 2026-09-01T04:01:16Z.
+- [agent-guild-scout](/bot/agent-guild-scout.html) ([json](/bot/agent-guild-scout.json), [md](/bot/agent-guild-scout.md)): `agent-guild-scout/1 (+https://agent-guild-5d5r.onrender.com/.well-known/agent-guild.json)` — 2 request(s) from 1 address(es), 2026-09-01T04:15:17Z to 2026-09-01T04:29:21Z.
+- [EndpointAudit](/bot/endpointaudit.html) ([json](/bot/endpointaudit.json), [md](/bot/endpointaudit.md)): `EndpointAudit/0.1 (+https://github.com/Zorglub354/endpointaudit)` — 2 request(s) from 1 address(es), 2026-09-01T01:54:55Z to 2026-09-01T01:54:55Z.
+- [GF-Agent-Toll-Outbound](/bot/gf-agent-toll-outbound.html) ([json](/bot/gf-agent-toll-outbound.json), [md](/bot/gf-agent-toll-outbound.md)): `GF-Agent-Toll-Outbound/1.6.0` — 2 request(s) from 1 address(es), 2026-09-01T02:56:53Z to 2026-09-01T02:56:53Z.
+- [GF-Agent-Toll-Remediation](/bot/gf-agent-toll-remediation.html) ([json](/bot/gf-agent-toll-remediation.json), [md](/bot/gf-agent-toll-remediation.md)): `GF-Agent-Toll-Remediation/1.0` — 2 request(s) from 1 address(es), 2026-09-01T03:03:03Z to 2026-09-01T03:03:03Z.
+- [mcpscan](/bot/mcpscan.html) ([json](/bot/mcpscan.json), [md](/bot/mcpscan.md)): `mcpscan/1.0 (+https://modc2.com/mcpscan; MCP index crawler)` — 2 request(s) from 1 address(es), 2026-09-01T02:28:50Z to 2026-09-01T02:28:50Z.
+- [pip](/bot/pip.html) ([json](/bot/pip.json), [md](/bot/pip.md)): `pip/24.3.1 {"ci":null,"cpu":"x86_64","implementation":{"name":"CPython","version":"3.11.9"` — 2 request(s) from 1 address(es), 2026-09-01T06:13:45Z to 2026-09-01T06:13:45Z.
+- [python-httpx](/bot/python-httpx.html) ([json](/bot/python-httpx.json), [md](/bot/python-httpx.md)): `python-httpx/0.28.1` — 2 request(s) from 2 address(es), 2026-08-31T22:44:55Z to 2026-09-01T02:53:55Z.
+- [ReactorNetty](/bot/reactornetty.html) ([json](/bot/reactornetty.json), [md](/bot/reactornetty.md)): `ReactorNetty/1.0.32` — 2 request(s) from 2 address(es), 2026-08-31T20:58:14Z to 2026-09-01T05:00:10Z.
+- [SaSameAgentAudit](/bot/sasameagentaudit.html) ([json](/bot/sasameagentaudit.json), [md](/bot/sasameagentaudit.md)): `SaSameAgentAudit/0.1 (+https://live-vps.sasame.online/.well-known/agent-card.json)` — 2 request(s) from 1 address(es), 2026-09-01T01:06:44Z to 2026-09-01T01:06:44Z.
+- [TelegramBot](/bot/telegrambot.html) ([json](/bot/telegrambot.json), [md](/bot/telegrambot.md)): `TelegramBot (like TwitterBot)` — 2 request(s) from 2 address(es), 2026-09-01T05:44:24Z to 2026-09-01T05:44:25Z.
+- [truespar-mcp-registry](/bot/truespar-mcp-registry.html) ([json](/bot/truespar-mcp-registry.json), [md](/bot/truespar-mcp-registry.md)): `truespar-mcp-registry/0.1 (+https://registry.truespar.com)` — 2 request(s) from 1 address(es), 2026-09-01T02:28:06Z to 2026-09-01T02:28:29Z.
+- [a2a-directory-discovery](/bot/a2a-directory-discovery.html) ([json](/bot/a2a-directory-discovery.json), [md](/bot/a2a-directory-discovery.md)): `a2a-directory-discovery` — 1 request(s) from 1 address(es), 2026-09-01T02:27:27Z to 2026-09-01T02:27:27Z.
+- [A2A-Registry](/bot/a2a-registry.html) ([json](/bot/a2a-registry.json), [md](/bot/a2a-registry.md)): `A2A-Registry/1.0` — 1 request(s) from 1 address(es), 2026-09-01T02:25:59Z to 2026-09-01T02:25:59Z.
+- [AetherLink-Public-Agent-Card-Policy-Check](/bot/aetherlink-public-agent-card-policy-check.html) ([json](/bot/aetherlink-public-agent-card-policy-check.json), [md](/bot/aetherlink-public-agent-card-policy-check.md)): `AetherLink-Public-Agent-Card-Policy-Check/1.0` — 1 request(s) from 1 address(es), 2026-09-01T03:13:23Z to 2026-09-01T03:13:23Z.
+- [AetherLinkDiscoveryEvidence](/bot/aetherlinkdiscoveryevidence.html) ([json](/bot/aetherlinkdiscoveryevidence.json), [md](/bot/aetherlinkdiscoveryevidence.md)): `AetherLinkDiscoveryEvidence/1.0 (+https://aetherlink.47-85-186-77.sslip.io/llms.txt)` — 1 request(s) from 1 address(es), 2026-09-01T03:30:37Z to 2026-09-01T03:30:37Z.
+- [AgentSure-MCPScan](/bot/agentsure-mcpscan.html) ([json](/bot/agentsure-mcpscan.json), [md](/bot/agentsure-mcpscan.md)): `Mozilla/5.0 (compatible; AgentSure-MCPScan/0.1; +https://agentsure.tech)` — 1 request(s) from 1 address(es), 2026-09-01T00:24:23Z to 2026-09-01T00:24:23Z.
+- [api-forge-mcp-index](/bot/api-forge-mcp-index.html) ([json](/bot/api-forge-mcp-index.json), [md](/bot/api-forge-mcp-index.md)): `api-forge-mcp-index/1.0 (+https://api.temsor.com/mcp/index; iletisim: altyapi@temsor.com)` — 1 request(s) from 1 address(es), 2026-09-01T01:29:04Z to 2026-09-01T01:29:04Z.
+- [Conway-Replicatio-r91-strict-a2a-probe](/bot/conway-replicatio-r91-strict-a2a-probe.html) ([json](/bot/conway-replicatio-r91-strict-a2a-probe.json), [md](/bot/conway-replicatio-r91-strict-a2a-probe.md)): `Conway-Replicatio-r91-strict-a2a-probe` — 1 request(s) from 1 address(es), 2026-09-01T04:56:01Z to 2026-09-01T04:56:01Z.
+- [curl](/bot/curl.html) ([json](/bot/curl.json), [md](/bot/curl.md)): `curl/7.88.0` — 1 request(s) from 1 address(es), 2026-09-01T02:28:30Z to 2026-09-01T02:28:30Z.
+- [MCPMeter](/bot/mcpmeter.html) ([json](/bot/mcpmeter.json), [md](/bot/mcpmeter.md)): `MCPMeter/1.0 (+https://mcpmeter.dev/about; measurement bot; contact via site)` — 1 request(s) from 1 address(es), 2026-08-31T23:48:38Z to 2026-08-31T23:48:38Z.
+- [PackageHound](/bot/packagehound.html) ([json](/bot/packagehound.json), [md](/bot/packagehound.md)): `PackageHound/1.0` — 1 request(s) from 1 address(es), 2026-09-01T06:13:51Z to 2026-09-01T06:13:51Z.
+- [SaSame-Census-Era-Probe](/bot/sasame-census-era-probe.html) ([json](/bot/sasame-census-era-probe.json), [md](/bot/sasame-census-era-probe.md)): `SaSame-Census-Era-Probe/1.0` — 1 request(s) from 1 address(es), 2026-09-01T01:07:30Z to 2026-09-01T01:07:30Z.
+- [SaSame-MCP-Audit](/bot/sasame-mcp-audit.html) ([json](/bot/sasame-mcp-audit.json), [md](/bot/sasame-mcp-audit.md)): `SaSame-MCP-Audit/0.1` — 1 request(s) from 1 address(es), 2026-09-01T01:07:30Z to 2026-09-01T01:07:30Z.
+- [TAR-Directory-Indexer](/bot/tar-directory-indexer.html) ([json](/bot/tar-directory-indexer.json), [md](/bot/tar-directory-indexer.md)): `TAR-Directory-Indexer/1.0` — 1 request(s) from 1 address(es), 2026-09-01T03:27:40Z to 2026-09-01T03:27:40Z.
+- [TAR-Discovery](/bot/tar-discovery.html) ([json](/bot/tar-discovery.json), [md](/bot/tar-discovery.md)): `TAR-Discovery/1.0` — 1 request(s) from 1 address(es), 2026-09-01T03:41:21Z to 2026-09-01T03:41:21Z.
+- [TAR-Health](/bot/tar-health.html) ([json](/bot/tar-health.json), [md](/bot/tar-health.md)): `TAR-Health/1.0` — 1 request(s) from 1 address(es), 2026-09-01T03:41:21Z to 2026-09-01T03:41:21Z.
+
+## If you are cataloguing this API
+
+- [/apis.json](/apis.json): APIs.json 1.0 record — identical bytes at [/.well-known/apis.json](/.well-known/apis.json).
+- [/openapi.json](/openapi.json) and [/openapi.yaml](/openapi.yaml): the same OpenAPI 3.1
+  document, two serialisations, one generator. [/swagger.json](/swagger.json) is a mechanical Swagger 2.0
+  conversion of it, served only because every operation here is a keyless GET.
+- [/.well-known/api-onboarding](/.well-known/api-onboarding): how to call it, the limits, what to call first.
+- [/.well-known/ai-plugin.json](/.well-known/ai-plugin.json) and
+  [/.well-known/mcp.json](/.well-known/mcp.json): plugin manifest and MCP server record.
+- [/.well-known/api-catalog](/.well-known/api-catalog): RFC 9727 linkset tying all of it together.
+- [/.well-known/agent-card.json](/.well-known/agent-card.json): A2A v1.0 Agent Card for the
+  agent at `/a2a`, with the legacy [/.well-known/agent.json](/.well-known/agent.json) serving
+  identical bytes. It declares one JSONRPC interface and six skills; `streaming`,
+  `pushNotifications` and `extendedAgentCard` are all `false` and the endpoint refuses each
+  with the error code the spec assigns rather than pretending.
+
+## Ownership and authorization, for scanners
+
+- [/.well-known/owners.json](/.well-known/owners.json),
+  [/mcp/.well-known/owners.json](/mcp/.well-known/owners.json),
+  [/mcp/doctor/.well-known/owners.json](/mcp/doctor/.well-known/owners.json),
+  [/mcp/triage/.well-known/owners.json](/mcp/triage/.well-known/owners.json): VerifyMCP's ownership
+  document (schema: https://verifymcp.io/schemas/owners.json), identical bytes at every path.
+  Host-level claims every MCP server on this host; each endpoint-level copy claims that one
+  server and nothing else. Three MCP servers, one operator, one host, so both scopes are true.
+  VerifyMCP-OwnersBot/1.0 asks per endpoint — it took a 404 on the `/mcp/triage` and
+  `/mcp/doctor` copies at 2026-09-01T03:12:18Z and 04:12:18Z before they existed — so if you
+  run more than one server behind one hostname, publish one file per endpoint, not just at
+  the root.
+- The MCP server at `/mcp` requires **no authorization**. There is no
+  `/.well-known/oauth-protected-resource` and no `/.well-known/oauth-authorization-server`,
+  and both are 404 on purpose: RFC 9728 protected-resource metadata "MUST include the
+  authorization_servers field containing at least one authorization server", there is no
+  authorization server here to name, and this host is not one. A 404 at those paths is the
+  specification's own answer for an unauthenticated server, not a gap. **Those 404s now
+  answer in JSON rather than HTML** — request
+  [/.well-known/oauth-protected-resource](/.well-known/oauth-protected-resource),
+  `/.well-known/oauth-authorization-server` or `/.well-known/openid-configuration` (root
+  form, RFC 9728 §3.1 path-insertion form, or `/mcp/.well-known/...`) and the body states
+  the reason, cites the spec, and points at the open endpoint, while the status stays 404.
+  Five named scanners asked for those three paths between 2026-08-31T22:32Z and
+  2026-09-01T03:23Z and each was handed a human error page; a machine-readable question
+  deserves a machine-readable refusal. The compact version of this paragraph is
+  `x-authorization` in [/.well-known/mcp.json](/.well-known/mcp.json).
+- [/.well-known/x402](/.well-known/x402): payment discovery, and the answer is **nothing here
+  costs money**. `accepts` is an empty array because there is no paid resource on this host —
+  no wallet, no facilitator, no 402 ever returned, no `PAYMENT-REQUIRED` header ever emitted.
+  Served as **200 rather than 404** because, unlike the OAuth documents above, an honest
+  document exists: "which resources require payment" has the true answer "none", and an empty
+  `accepts` is exactly how x402 spells that. The body also states the negative — `implemented:
+  false`, `payTo: null`, `networks: []` — so nobody can read the file's existence as this host
+  adopting the protocol. Worth knowing if you are being asked for it too: `x402` is **not** a
+  registered well-known URI (absent from the IANA registry, 114 suffixes) and the path appears
+  nowhere in the x402 specification, whose own discovery mechanism is the `bazaar` extension
+  carried inside a real 402 response and catalogued by a facilitator. It is a de-facto
+  convention that payment-discovery crawlers use anyway. AgenstryBot/0.3.0 asked this host for
+  it at 2026-09-01T04:28:51Z with `Accept: application/json` and took a 404; it now gets the
+  document. Same bytes at `/.well-known/x402.json`.
+- **No `/.well-known/payment-manifest` and no `/.well-known/mpp`** — both 404 by decision, and
+  the 404 now answers in JSON with the reason instead of an HTML page. The same crawler
+  (AgenstryBot/0.3.0) asked for these two in the same second as `x402` above, at
+  2026-09-01T04:28:51Z. `x402` could be answered honestly and is; these two cannot. The W3C
+  Payment Method Manifest specification **disallows locating that document by guessing a path**
+  (§4.1: it "must be linked via a Link HTTP header" from a payment method identifier URL, and
+  we emit no such header), what it registers with IANA is the *link relation*
+  `payment-method-manifest` rather than a well-known URI, and its format (§2: at most two keys,
+  `default_applications` and `supported_origins`, each **non-empty if present**) has no way to
+  express "this origin is not a payment method" — an empty array is invalid and a populated one
+  is invented. `/.well-known/mpp` has no public specification we could locate at all, and the
+  crawler that asked for it returns 404 on its own. If you are getting the same probe: the file
+  worth serving is `/.well-known/x402` with an empty `accepts`, not a guessed manifest.
+- No `/.well-known/glama.json`: claiming a Glama connector needs an account-bound
+  `glama_claim_...` token we have not been issued, and their documentation says never to
+  publish an email address as ownership proof. An unclaimed listing is the true state.
+- [/security.html](/security.html) and [/security.json](/security.json): what this host
+  runs, and why each path a scanner probes is a 404 rather than hidden. There is no origin
+  server — no Apache, no nginx, no application runtime — so `/server-status`, `/debug`,
+  `/admin`, `/dashboard`, `/_internal`, `/.env`, `/.git/config`, `/config.json`,
+  `/appsettings.json` and `/package.json` are all **404 by construction, and refused on
+  purpose**. `/server-status` in particular would stay refused even on Apache: a truthful
+  scoreboard names in-flight request URLs and the addresses being served, which is our
+  visitors' data and not ours to publish. The aggregate half of that question is already
+  public at [/stats.json](/stats.json). Nothing here returns a soft 404, so a scanner's
+  control probe means what it thinks it means.
+
+## The distinction that matters most
+
+Training and AI search are different crawlers with different tokens, and blocking them
+together is the common expensive mistake. `GPTBot` trains; `OAI-SearchBot` builds the index
+ChatGPT cites. `ClaudeBot` trains; `Claude-SearchBot` indexes. Google and Apple run no
+separate AI crawler at all — `Google-Extended` and `Applebot-Extended` are robots.txt
+control tokens with no user-agent, so blocking `Googlebot` to avoid AI costs you Google
+Search and achieves nothing else.
+
+## Notes
+
+- A user-agent match is a claim, not a proof. Verify against /ip-ranges/ or reverse DNS.
+- Anthropic, Common Crawl, Meta and ByteDance publish no IP ranges: for those, the
+  user-agent is all there is, and it is trivially spoofable.
+- Perplexity-User and Bytespider are documented or reported as not governed by robots.txt.
+  A rule for them is a statement of intent; enforcement has to happen at the edge.
+
+## Optional
+
+- [Config snippets](/snippet/index.html): nginx, Caddy, Apache, Cloudflare Worker, Python.
+- [By operator](/operator/index.html) · [By category](/crawler/index.html) ·
+  [About and method](/about.html) · [Changelog](/changelog.html)

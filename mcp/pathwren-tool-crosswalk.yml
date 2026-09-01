@@ -1,0 +1,138 @@
+generated: '2026-09-01'
+method: derived
+source: >-
+  Derived by binding the live tools/list responses (probed 2026-09-01, HTTP 200, unauthenticated)
+  from all three MCP servers to the operationIds declared in the provider's own OpenAPI 3.1
+  document at https://www.pathwren.workers.dev/openapi.json. Both sides are real and both were
+  fetched — nothing here is mapped by guesswork about an unseen schema.
+surfaces:
+  openapi:
+    url: https://www.pathwren.workers.dev/openapi.json
+    local: openapi/pathwren-ai-crawler-index-openapi.json
+    version: 3.1.0
+    operations: 68
+    gated: false
+  graphql: null
+  mcp:
+    endpoints:
+    - https://www.pathwren.workers.dev/mcp
+    - https://www.pathwren.workers.dev/mcp/triage
+    - https://www.pathwren.workers.dev/mcp/doctor
+    gated: false
+    note: tools/list answers anonymously on all three; inputSchemas below are the server's own.
+crosswalk:
+- tool: lookup_crawler
+  server: ai-crawler-index
+  category: crawlers
+  rest: [getCrawler]
+  binding: direct
+  confidence: high
+  note: >-
+    GET /crawler/{slug}.json. The tool's single required `slug` argument is that path parameter;
+    the tool additionally returns near matches on a miss where REST returns 404.
+- tool: list_crawlers
+  server: ai-crawler-index
+  category: bulk
+  rest: [listCrawlers]
+  binding: direct-plus-filter
+  confidence: high
+  note: >-
+    GET /data/agents.json returns all 56 records; the tool's category/operator/respects_robots_txt/
+    verification/q/limit arguments are filters applied over that same payload, which REST does not
+    expose as query parameters.
+- tool: generate_robots_txt
+  server: ai-crawler-index
+  category: robots
+  rest: [getRobotsPolicy, getPolicy]
+  binding: direct
+  confidence: high
+  note: >-
+    `stance` is the {policy} path parameter of GET /robots/{policy}.txt (text) and
+    GET /policy/{policy}.json (the reasoning and named crawlers). Omitting the argument returns
+    all eight stances, which has no single REST equivalent.
+- tool: is_verified_crawler_ip
+  server: ai-crawler-index
+  category: ip-ranges
+  rest: [getAllIpRanges]
+  binding: composite
+  confidence: high
+  note: >-
+    The REST surface publishes the prefix union at GET /ip-ranges/all.json; the containment test
+    for a supplied `ip` is performed server-side by the tool. No REST operation accepts an IP.
+- tool: whats_changed
+  server: ai-crawler-index
+  category: status
+  rest: [getStatus, getFeed]
+  binding: composite
+  confidence: high
+  note: >-
+    GET /status.json (per-source fetch state, changed_since_last_fetch) plus GET /feed.json
+    (dated change entries); `since` filters the combined result and has no REST parameter.
+- tool: classify_user_agent
+  server: ai-crawler-index
+  category: bot-detection
+  rest: [getUserAgentRegex, listCrawlers]
+  binding: composite
+  confidence: medium
+  note: >-
+    No REST operation takes a User-Agent header value. The primitives are published —
+    GET /data/ua-regex.json (pre-escaped per-category regex) and GET /data/agents.json
+    (user_agent_substring on every record) — but the match itself is the tool's work.
+    Confidence medium because the binding is semantic, not a parameter-for-parameter mapping.
+mcp_only:
+- tool: triage_log
+  server: crawler-log-triage
+  reason: Takes a whole access log as a string argument; there is no REST operation that accepts a request body of any kind (every path is a GET on a static file).
+- tool: find_impersonators
+  server: crawler-log-triage
+  reason: Cross-references log lines against the mirrored prefix union; composite over getAllIpRanges with no REST equivalent.
+- tool: summarize_by_operator
+  server: crawler-log-triage
+  reason: Aggregation over caller-supplied input; no REST aggregation endpoint exists.
+- tool: robots_from_log
+  server: crawler-log-triage
+  reason: Generates a robots.txt scoped to the crawlers present in the caller's log — REST only serves the eight fixed stances.
+- tool: waf_ruleset_from_log
+  server: crawler-log-triage
+  reason: Emits nginx/Caddy/Cloudflare/HAProxy/Apache rules; no REST operation produces WAF config.
+- tool: check_discovery_documents
+  server: agent-discovery-doctor
+  reason: Probes a third-party host for 22 discovery documents; operates on someone else's surface, not on this dataset.
+- tool: explain_document
+  server: agent-discovery-doctor
+  reason: Catalogue of discovery-document semantics plus this host's observed-client log; not exposed over REST.
+- tool: validate_llms_txt
+  server: agent-discovery-doctor
+  reason: Validator over pasted text; requires a request body.
+- tool: llms_txt_from_sitemap
+  server: agent-discovery-doctor
+  reason: Generator over pasted sitemap XML; requires a request body.
+- tool: validate_agent_card
+  server: agent-discovery-doctor
+  reason: Validator over a pasted agent card; requires a request body.
+rest_only:
+- operationIds: [listCrawlersCsv]
+  reason: CSV rendering of the same dataset — no tool returns CSV.
+- operationIds: [getAllIpRangesText]
+  reason: Flat CIDR list for a WAF paste; the tool surface returns structured verdicts instead.
+- operationIds: [getIpRangeSource]
+  reason: Per-source prefix list with provenance; the tools only expose the union.
+- operationIds: [listIpSources]
+  reason: Which operators publish ranges and where; surfaced through whats_changed only indirectly.
+- operationIds: [getFeed]
+  reason: Also bound above under whats_changed, but callable directly as a JSON Feed.
+- operationIds: [crawler_gptbot, crawler_claudebot, crawler_googlebot, "… 53 more"]
+  reason: >-
+    The spec additionally enumerates one fixed operationId per crawler slug (56 of them) alongside
+    the templated getCrawler. They are the same resource pre-expanded for spec readers and are all
+    covered by the single lookup_crawler tool.
+coverage:
+  mcp_tools_total: 16
+  mcp_tools_bound_to_rest: 6
+  mcp_only: 10
+  rest_operations_total: 68
+  rest_operations_bound: 8
+  rest_only_families: 6
+  note: >-
+    The two secondary servers (triage, doctor) are genuinely MCP-native: both require a request
+    body, and the REST surface is GET-only static files, so they cannot have a REST twin.

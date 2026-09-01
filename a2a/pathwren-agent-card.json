@@ -1,0 +1,174 @@
+{
+ "name": "AI Crawler Index",
+ "description": "Every AI crawler on the web, what it is for, what blocking it costs you, and the IP ranges its operator publishes — as JSON, CSV, robots.txt and regex. Ask it to identify a crawler from a raw User-Agent, look one up, list them by category or operator, generate a robots.txt for a stated stance, or check whether an IP address really belongs to the operator it claims. Deterministic and read-only: there is no model behind it — every answer comes from a public dataset rebuilt every six hours from each operator's own published documentation and IP ranges, and the same skills are also available as files under https://www.pathwren.workers.dev/ and as MCP tools at https://www.pathwren.workers.dev/mcp. No key, no signup, no quota. Independent and unaffiliated with any operator it documents.",
+ "supportedInterfaces": [
+  {
+   "url": "https://www.pathwren.workers.dev/a2a",
+   "protocolBinding": "JSONRPC",
+   "protocolVersion": "1.0"
+  }
+ ],
+ "url": "https://www.pathwren.workers.dev/a2a",
+ "preferredTransport": "JSONRPC",
+ "protocolVersion": "1.0",
+ "provider": {
+  "organization": "Pathwren",
+  "url": "https://www.pathwren.workers.dev"
+ },
+ "version": "1.0.0",
+ "documentationUrl": "https://www.pathwren.workers.dev/a2a.html",
+ "iconUrl": "https://www.pathwren.workers.dev/icon.png",
+ "capabilities": {
+  "streaming": false,
+  "pushNotifications": false,
+  "extendedAgentCard": false
+ },
+ "defaultInputModes": [
+  "application/json",
+  "text/plain"
+ ],
+ "defaultOutputModes": [
+  "application/json",
+  "text/plain"
+ ],
+ "skills": [
+  {
+   "id": "classify_user_agent",
+   "name": "Classify a user-agent string",
+   "description": "Identify the crawler behind a raw User-Agent header: operator, category, robots.txt stance, how to verify it, and what blocking it costs. A user-agent is a claim, not proof — confirm with is_verified_crawler_ip. Example: user_agent='GPTBot/1.2' returns GPTBot, OpenAI, ai-training.",
+   "tags": [
+    "user-agent",
+    "crawlers",
+    "bot detection",
+    "identification"
+   ],
+   "examples": [
+    "{\"skill\":\"classify_user_agent\",\"user_agent\":\"Mozilla/5.0 (compatible; GPTBot/1.2; +https://openai.com/gptbot)\"}",
+    "classify_user_agent ClaudeBot/1.0"
+   ],
+   "inputModes": [
+    "application/json",
+    "text/plain"
+   ],
+   "outputModes": [
+    "application/json",
+    "text/plain"
+   ]
+  },
+  {
+   "id": "lookup_crawler",
+   "name": "Look up one crawler",
+   "description": "The full index record for one crawler: operator, category, robots.txt token and stance, user-agent substring and example, verification method, mirrored IP-range endpoint, and what blocking it costs. An unknown slug returns near matches. Example: slug='claudebot'.",
+   "tags": [
+    "crawlers",
+    "reference",
+    "robots.txt",
+    "lookup"
+   ],
+   "examples": [
+    "{\"skill\":\"lookup_crawler\",\"slug\":\"claudebot\"}",
+    "lookup_crawler perplexitybot"
+   ],
+   "inputModes": [
+    "application/json",
+    "text/plain"
+   ],
+   "outputModes": [
+    "application/json",
+    "text/plain"
+   ]
+  },
+  {
+   "id": "list_crawlers",
+   "name": "List and filter crawlers",
+   "description": "The index, filtered or whole: each row says what the crawler is and what blocking it costs, and the reply lists every valid filter value. Example: category='ai-training', limit=20.",
+   "tags": [
+    "crawlers",
+    "catalogue",
+    "filter",
+    "discovery"
+   ],
+   "examples": [
+    "{\"skill\":\"list_crawlers\",\"category\":\"ai-training\",\"limit\":20}",
+    "{\"skill\":\"list_crawlers\",\"operator\":\"openai\"}"
+   ],
+   "inputModes": [
+    "application/json",
+    "text/plain"
+   ],
+   "outputModes": [
+    "application/json",
+    "text/plain"
+   ]
+  },
+  {
+   "id": "generate_robots_txt",
+   "name": "Generate a robots.txt for a stance",
+   "description": "A ready-to-paste robots.txt block for one stance, with the reasoning and the crawlers it names. Omit the argument to get all eight stances described. Example: stance='block-ai-training'.",
+   "tags": [
+    "robots.txt",
+    "policy",
+    "configuration",
+    "generator"
+   ],
+   "examples": [
+    "{\"skill\":\"generate_robots_txt\",\"stance\":\"block-ai-training\"}",
+    "generate a robots.txt for maximum-ai-visibility"
+   ],
+   "inputModes": [
+    "application/json",
+    "text/plain"
+   ],
+   "outputModes": [
+    "application/json",
+    "text/plain"
+   ]
+  },
+  {
+   "id": "is_verified_crawler_ip",
+   "name": "Check an IP against operator-published crawler ranges",
+   "description": "Test an IPv4 or IPv6 address against every crawler prefix the operators themselves publish, remirrored every six hours. Returns the matching prefix, its source and the crawlers using it; a miss is reported as a miss, not as a forgery. Example: ip='20.171.206.5'.",
+   "tags": [
+    "ip ranges",
+    "verification",
+    "bot detection",
+    "security"
+   ],
+   "examples": [
+    "{\"skill\":\"is_verified_crawler_ip\",\"ip\":\"20.171.206.5\"}",
+    "is 20.171.206.5 a verified crawler"
+   ],
+   "inputModes": [
+    "application/json",
+    "text/plain"
+   ],
+   "outputModes": [
+    "application/json",
+    "text/plain"
+   ]
+  },
+  {
+   "id": "whats_changed",
+   "name": "What changed in the index",
+   "description": "Freshness and change state: when the index was built, when each operator source was last fetched, which changed, which are failing, and the dated changelog. The cron check before regenerating a config from this data. Example: since='2026-08-01'.",
+   "tags": [
+    "freshness",
+    "changelog",
+    "monitoring",
+    "data quality"
+   ],
+   "examples": [
+    "{\"skill\":\"whats_changed\",\"since\":\"2026-08-01\"}",
+    "what changed"
+   ],
+   "inputModes": [
+    "application/json",
+    "text/plain"
+   ],
+   "outputModes": [
+    "application/json",
+    "text/plain"
+   ]
+  }
+ ]
+}

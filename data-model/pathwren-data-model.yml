@@ -1,0 +1,107 @@
+generated: '2026-09-01'
+method: derived
+source: >-
+  Derived from components.schemas.Crawler and the $ref / id-reference wiring in
+  https://www.pathwren.workers.dev/openapi.json, cross-checked against the live payloads of
+  /data/agents.json, /data/ip-sources.json and /status.json (all fetched 2026-09-01).
+entities:
+- name: Crawler
+  schema: json-schema/pathwren-crawler.schema.json
+  id_field: slug
+  id_shape: lowercase-hyphenated token (gptbot, claudebot, oai-searchbot, meta-externalagent)
+  count_at_fetch: 56
+  primary_endpoints:
+  - GET /crawler/{slug}.json
+  - GET /crawler/{slug}.md
+  - GET /data/agents.json
+  - GET /data/agents.csv
+  required: [slug, name, operator, category, robots_token]
+  notable_fields:
+  - name: cost_of_blocking
+    detail: >-
+      The field the provider says nobody else publishes, and it is explicitly labelled as the
+      index's own assessment rather than the operator's claim.
+  - name: respects_robots_txt
+    enum: [documented, by-design-no, disputed, n-a]
+  - name: verification_method
+    enum: [published-ranges, reverse-dns, none]
+- name: Operator
+  id_field: operator_slug
+  count_at_fetch: 30
+  detail: >-
+    Not a standalone schema — an operator exists as the `operator` / `operator_slug` pair carried
+    on every Crawler and as the `operator` key on every IpSource row. Rendered per-operator at
+    /operator/{slug}.html.
+- name: Category
+  id_field: category
+  count_at_fetch: 9
+  enum: [ai-search, ai-training, archive, dataset, preview, search, seo, tool, user-fetch]
+  detail: Closed enum on Crawler.category; rendered at /category/{slug}.html and used to slice /data/ua-regex.json.
+- name: Policy
+  id_field: policy
+  count_at_fetch: 8
+  primary_endpoints:
+  - GET /policy/{policy}.json
+  - GET /robots/{policy}.txt
+  detail: >-
+    A named robots.txt stance (block-ai-training, allow-ai-search-only, maximum-ai-visibility,
+    block-every-ai-crawler, block-corpus-and-dataset-builders, allow-everything, …). Each policy
+    is generated from the Crawler set, so it can never name a token that has changed.
+- name: IpSource
+  id_field: slug
+  count_at_fetch: 12
+  primary_endpoints:
+  - GET /data/ip-sources.json
+  - GET /ip-ranges/{source}.json
+  - GET /ip-ranges/all.json
+  fields: [slug, operator, url, ok, http_status, error, fetched_at, source_created, ipv4_count, ipv6_count, sha256, changed_since_last_fetch]
+  detail: >-
+    One operator-published prefix endpoint, mirrored with provenance — the upstream URL, the
+    operator's own timestamp and a SHA-256 of the bytes received.
+- name: Status
+  primary_endpoints: [GET /status.json]
+  fields: [generated_at, checked_at, sources_total, sources_ok, sources_failed, unique_ipv4_prefixes, unique_ipv6_prefixes, crawlers_indexed, operators_indexed, policies, sources]
+  detail: The build record; embeds the full IpSource array.
+relationships:
+- from: Crawler
+  to: Operator
+  type: belongs_to
+  via: operator_slug
+- from: Operator
+  to: Crawler
+  type: has_many
+  via: operator_slug
+- from: Crawler
+  to: Category
+  type: belongs_to
+  via: category
+- from: Category
+  to: Crawler
+  type: has_many
+  via: category
+- from: Crawler
+  to: IpSource
+  type: has_one
+  via: published_ip_ranges_url
+  note: >-
+    Nullable — verification_method "reverse-dns" or "none" means no source row exists. The
+    Crawler record also carries ip_ranges_endpoint pointing at this host's mirror of it.
+- from: IpSource
+  to: Operator
+  type: belongs_to
+  via: operator
+- from: Status
+  to: IpSource
+  type: has_many
+  via: sources
+- from: Policy
+  to: Crawler
+  type: has_many
+  via: generated selection over category + respects_robots_txt
+  note: Derived membership rather than a stored foreign key — the policy files are rebuilt from the Crawler set.
+denormalization:
+  note: >-
+    The graph is deliberately flat and denormalized for single-fetch consumption: /data/agents.json
+    carries every Crawler with its category label, operator name, prefix counts and the URL of its
+    own IP-range mirror, so a caller answers almost every question from one 74KB document without
+    following a relationship at all.
