@@ -4,6 +4,21 @@ type: Index
 description: 'Every AI crawler on the web, what it is for, what blocking it costs you, and the IP ranges its operator publishes
   — as JSON, CSV, robots.txt and regex. 56 crawlers from 30 operators, 1887 IPv4 and 1056 IPv6 prefixes mirrored from 12 operator-published
   endpoints and refreshed every six hours. Read-only static files: no key, no signup, no rate limit, CORS open, CC0.'
+accessModel:
+  pricing: free
+  onboarding: open
+  trial: false
+  try_now: true
+  public: true
+  label: Free · Open access
+  confidence: high
+  source:
+  - plans
+  - authentication
+  - rate-limits
+  - security
+  generated: '2026-09-02'
+  method: derived
 image: https://www.pathwren.workers.dev/icon.png
 url: https://www.pathwren.workers.dev/apis.json
 specificationVersion: '1.0'
