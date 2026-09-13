@@ -1,10 +1,8 @@
 generated: '2026-09-01'
 method: probed
-source: >-
-  Live unauthenticated JSON-RPC POST {"jsonrpc":"2.0","id":1,"method":"tools/list"} to each of the
-  three endpoints below on 2026-09-01; every one answered HTTP 200 with a full tools[] array
-  including inputSchema. Endpoints and registry names read from the provider's own
-  https://www.pathwren.workers.dev/.well-known/mcp.json.
+source: Live unauthenticated JSON-RPC POST {"jsonrpc":"2.0","id":1,"method":"tools/list"} to each of the
+  three endpoints below on 2026-09-01; every one answered HTTP 200 with a full tools[] array including
+  inputSchema. Endpoints and registry names read from the provider's own https://www.pathwren.workers.dev/.well-known/mcp.json.
 deployment:
   mode: remote
   endpoint: https://www.pathwren.workers.dev/mcp
@@ -12,10 +10,14 @@ deployment:
   package: null
   auth: none
   verified: probed
-  note: >-
-    Remote only. No npx/stdio package is published in any registry (see packages/), so the
-    only way to reach this provider through MCP is the hosted Streamable-HTTP endpoint —
-    which an agent can call right now with no install step and no key.
+  note: Remote only. No npx/stdio package is published in any registry (see packages/), so the only way
+    to reach this provider through MCP is the hosted Streamable-HTTP endpoint — which an agent can call
+    right now with no install step and no key.
+  probe_prior: (never probed)
+  probe: live
+  probe_why: live
+  checked: '2026-09-11'
+  source: claimed-backlog re-probe 2026-09-11
 transport: streamable-http
 protocol_versions:
 - '2026-07-28'
@@ -25,9 +27,8 @@ protocol_versions:
 - '2024-11-05'
 registry:
   url: https://registry.modelcontextprotocol.io
-  note: >-
-    /.well-known/mcp.json mirrors the official MCP Registry record for each server verbatim
-    under x-registry-record, schema and all.
+  note: /.well-known/mcp.json mirrors the official MCP Registry record for each server verbatim under
+    x-registry-record, schema and all.
 servers:
 - name: dev.workers.pathwren.www/ai-crawler-index
   title: AI Crawler Index
@@ -41,31 +42,44 @@ servers:
     file: mcp/pathwren-ai-crawler-index-tools.json
   tools:
   - name: classify_user_agent
-    required: [user_agent]
-    description: Identify the crawler behind a raw User-Agent header — operator, category, robots.txt stance, verification method, cost of blocking.
+    required:
+    - user_agent
+    description: Identify the crawler behind a raw User-Agent header — operator, category, robots.txt
+      stance, verification method, cost of blocking.
   - name: lookup_crawler
-    required: [slug]
+    required:
+    - slug
     description: The full index record for one crawler; an unknown slug returns near matches.
   - name: list_crawlers
     required: []
-    parameters: [category, operator, respects_robots_txt, verification, q, limit]
+    parameters:
+    - category
+    - operator
+    - respects_robots_txt
+    - verification
+    - q
+    - limit
     description: The index, filtered or whole; the reply enumerates every valid filter value.
   - name: generate_robots_txt
     required: []
-    parameters: [stance]
-    description: A ready-to-paste robots.txt block for one of eight stances, with reasoning and the crawlers it names.
+    parameters:
+    - stance
+    description: A ready-to-paste robots.txt block for one of eight stances, with reasoning and the crawlers
+      it names.
   - name: is_verified_crawler_ip
-    required: [ip]
-    description: Test an IPv4/IPv6 address against every operator-published crawler prefix; a miss is reported as a miss, not a forgery.
+    required:
+    - ip
+    description: Test an IPv4/IPv6 address against every operator-published crawler prefix; a miss is
+      reported as a miss, not a forgery.
   - name: whats_changed
     required: []
-    parameters: [since]
-    description: Build time, per-source fetch state, which sources changed or are failing, and the dated changelog.
+    parameters:
+    - since
+    description: Build time, per-source fetch state, which sources changed or are failing, and the dated
+      changelog.
   annotations:
-    note: >-
-      Every tool carries readOnlyHint:true, destructiveHint:false, idempotentHint:true,
-      openWorldHint:false in its own annotations block — the server declares itself
-      side-effect free.
+    note: Every tool carries readOnlyHint:true, destructiveHint:false, idempotentHint:true, openWorldHint:false
+      in its own annotations block — the server declares itself side-effect free.
 - name: dev.workers.pathwren.www/crawler-log-triage
   title: Crawler Log Triage
   version: 1.0.0
@@ -78,19 +92,34 @@ servers:
     file: mcp/pathwren-crawler-log-triage-tools.json
   tools:
   - name: triage_log
-    required: [log]
-    parameters: [log, detail, limit]
+    required:
+    - log
+    parameters:
+    - log
+    - detail
+    - limit
   - name: find_impersonators
-    required: [log]
+    required:
+    - log
   - name: summarize_by_operator
-    required: [log]
+    required:
+    - log
   - name: robots_from_log
-    required: [log]
-    parameters: [log, stance]
+    required:
+    - log
+    parameters:
+    - log
+    - stance
   - name: waf_ruleset_from_log
-    required: [log]
-    parameters: [log, target, scope, action]
-  note: No tool in common with the AI Crawler Index server — different input (a whole access log), different job.
+    required:
+    - log
+    parameters:
+    - log
+    - target
+    - scope
+    - action
+  note: No tool in common with the AI Crawler Index server — different input (a whole access log), different
+    job.
 - name: dev.workers.pathwren.www/agent-discovery-doctor
   title: Agent Discovery Doctor
   version: 1.0.0
@@ -103,18 +132,30 @@ servers:
     file: mcp/pathwren-agent-discovery-doctor-tools.json
   tools:
   - name: check_discovery_documents
-    required: [host]
-    parameters: [host, groups, mcp_path]
+    required:
+    - host
+    parameters:
+    - host
+    - groups
+    - mcp_path
   - name: explain_document
     required: []
-    parameters: [name]
+    parameters:
+    - name
   - name: validate_llms_txt
-    required: [text]
+    required:
+    - text
   - name: llms_txt_from_sitemap
-    required: [xml]
-    parameters: [xml, title, summary, max_per_section]
+    required:
+    - xml
+    parameters:
+    - xml
+    - title
+    - summary
+    - max_per_section
   - name: validate_agent_card
-    required: [json]
+    required:
+    - json
 resources:
 - https://www.pathwren.workers.dev/data/agents.json
 - https://www.pathwren.workers.dev/data/ua-regex.json
@@ -124,8 +165,7 @@ authorization:
   required: false
   oauth_protected_resource_metadata: null
   oauth_authorization_server_metadata: null
-  note: >-
-    Probed anonymously: /.well-known/oauth-protected-resource, /.well-known/oauth-authorization-server
-    and /.well-known/openid-configuration all return 404 with a JSON body. The provider documents
-    this as intentional in /.well-known/mcp.json x-authorization — the server never issues a 401
-    and never inspects an Authorization header.
+  note: 'Probed anonymously: /.well-known/oauth-protected-resource, /.well-known/oauth-authorization-server
+    and /.well-known/openid-configuration all return 404 with a JSON body. The provider documents this
+    as intentional in /.well-known/mcp.json x-authorization — the server never issues a 401 and never
+    inspects an Authorization header.'
