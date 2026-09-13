@@ -169,3 +169,25 @@ authorization:
     and /.well-known/openid-configuration all return 404 with a JSON body. The provider documents this
     as intentional in /.well-known/mcp.json x-authorization — the server never issues a 401 and never
     inspects an Authorization header.'
+tools_count: 9
+tools:
+- name: whoami
+  description: ''
+- name: example
+  description: ''
+- name: classify_user_agent
+  description: ''
+- name: lookup_crawler
+  description: ''
+- name: list_crawlers
+  description: ''
+- name: generate_robots_txt
+  description: ''
+- name: is_verified_crawler_ip
+  description: ''
+- name: whats_changed
+  description: ''
+- name: changes_since
+  description: ''
+tools_source: live tools/list via initialize handshake, 2026-09-11 (signals/audit_mcp_authorship.py --probe)
+authorship: provider
