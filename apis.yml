@@ -131,7 +131,7 @@ apis:
     description: Mirrored from the provider's own x-mcp-server property so the canonical reader sees it.
       Verified 2026-09-01.
   - type: OpenAPI
-    url: openapi/pathwren-ai-crawler-index-openapi.json
+    url: openapi/_original/pathwren-ai-crawler-index-openapi.json
     description: Verbatim copy of the provider's OpenAPI 3.1 document, fetched 2026-09-01 (HTTP 200).
   - type: Overlay
     url: overlays/pathwren-ai-crawler-index-overlay.yaml
