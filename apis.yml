@@ -52,46 +52,16 @@ maintainers:
   email: pathwren@tutamail.com
   url: https://www.pathwren.workers.dev/about.html
 apis:
-- aid: www.pathwren.workers.dev:ai-crawler-index
-  name: AI Crawler Index
-  description: 'Which crawler a User-Agent header belongs to, who operates it, whether it documents obeying
-    robots.txt, how to verify it is genuine against the operator''s own published IP ranges, and what
-    blocking it costs you. Every endpoint is a GET returning JSON, CSV or plain text.
-
-
-    HOST NOTE: the entire surface is served from www.pathwren.workers.dev, a Cloudflare Workers default
-    subdomain rather than a custom domain. That is NOT an ephemeral tunnel -- unlike a trycloudflare quick
-    tunnel, a workers.dev subdomain is stable and tied to the account -- but it is a platform-owned address,
-    so the operator does not control it and it cannot be moved. Recorded rather than treated as disqualifying:
-    everything it serves is real and complete. Verified 2026-09-01.'
-  image: https://www.pathwren.workers.dev/icon.png
+- aid: pathwren:pathwren-bulk-api
+  name: AI Crawler Index Bulk API
+  description: The whole dataset in several shapes.
   humanURL: https://www.pathwren.workers.dev/api.html?s=ai-crawler-index&c=apis-json
   baseURL: https://www.pathwren.workers.dev
   tags:
-  - AI crawlers
-  - web crawlers
-  - Robots.txt
-  - User Agents
-  - Bot Detection
-  - GPTBot
-  - ClaudeBot
-  - crawler IP ranges
-  - llms-txt
-  - Open Data
-  tags_raw:
-  - AI crawlers
-  - web crawlers
-  - robots.txt
-  - user agents
-  - bot detection
-  - GPTBot
-  - ClaudeBot
-  - crawler IP ranges
-  - llms.txt
-  - open data
+  - bulk
   properties:
   - type: OpenAPI
-    url: https://www.pathwren.workers.dev/openapi.json
+    url: openapi/pathwren-bulk-api-openapi.yml
   - type: x-openapi-yaml
     url: https://www.pathwren.workers.dev/openapi.yaml
   - type: Swagger
@@ -126,15 +96,6 @@ apis:
     url: https://www.pathwren.workers.dev/status.html
   - type: License
     url: https://creativecommons.org/publicdomain/zero/1.0/
-  - type: MCPServer
-    url: https://www.pathwren.workers.dev/mcp
-    description: Mirrored from the provider's own x-mcp-server property so the canonical reader sees it.
-      Verified 2026-09-01.
-  - type: OpenAPI
-    url: openapi/_original/pathwren-ai-crawler-index-openapi.json
-    description: Verbatim copy of the provider's OpenAPI 3.1 document, fetched 2026-09-01 (HTTP 200).
-  - type: Overlay
-    url: overlays/pathwren-ai-crawler-index-overlay.yaml
   - type: JSONSchema
     url: json-schema/pathwren-crawler.schema.json
   - type: Authentication
@@ -155,11 +116,265 @@ apis:
     url: https://www.pathwren.workers.dev/api.html
   - type: ChangeLog
     url: https://www.pathwren.workers.dev/changelog.html
-  contact:
-  - FN: Pathwren
-    email: pathwren@tutamail.com
-    url: https://www.pathwren.workers.dev/about.html
+- aid: pathwren:pathwren-crawlers-api
+  name: AI Crawler Index Crawlers API
+  description: One record per crawler.
+  humanURL: https://www.pathwren.workers.dev/api.html?s=ai-crawler-index&c=apis-json
+  baseURL: https://www.pathwren.workers.dev
+  tags:
+  - crawlers
+  properties:
+  - type: OpenAPI
+    url: openapi/pathwren-crawlers-api-openapi.yml
+  - type: x-openapi-yaml
+    url: https://www.pathwren.workers.dev/openapi.yaml
+  - type: Swagger
+    url: https://www.pathwren.workers.dev/swagger.json
+  - type: Documentation
+    url: https://www.pathwren.workers.dev/api.html
+  - type: Feed
+    url: https://www.pathwren.workers.dev/feed.xml
+  - type: Feed
+    url: https://www.pathwren.workers.dev/feed.json
+  - type: x-mcp-server
+    url: https://www.pathwren.workers.dev/mcp
+  - type: x-mcp-manifest
+    url: https://www.pathwren.workers.dev/.well-known/mcp.json
+  - type: x-onboarding
+    url: https://www.pathwren.workers.dev/.well-known/api-onboarding
+  - type: x-plugin-manifest
+    url: https://www.pathwren.workers.dev/.well-known/ai-plugin.json
+  - type: x-api-catalog
+    url: https://www.pathwren.workers.dev/.well-known/api-catalog
+  - type: x-llms-txt
+    url: https://www.pathwren.workers.dev/llms.txt
+  - type: x-bulk-data
+    url: https://www.pathwren.workers.dev/data/agents.json
+  - type: x-ip-ranges
+    url: https://www.pathwren.workers.dev/ip-ranges/all.json
+  - type: x-security-txt
+    url: https://www.pathwren.workers.dev/.well-known/security.txt
+  - type: x-sitemap
+    url: https://www.pathwren.workers.dev/sitemap.xml
+  - type: StatusPage
+    url: https://www.pathwren.workers.dev/status.html
+  - type: License
+    url: https://creativecommons.org/publicdomain/zero/1.0/
+  - type: JSONSchema
+    url: json-schema/pathwren-crawler.schema.json
+  - type: Authentication
+    url: authentication/pathwren-authentication.yml
+  - type: Conventions
+    url: conventions/pathwren-conventions.yml
+  - type: ErrorCatalog
+    url: errors/pathwren-problem-types.yml
+  - type: RateLimits
+    url: rate-limits/pathwren-rate-limits.yml
+  - type: DataModel
+    url: data-model/pathwren-data-model.yml
+  - type: ToolCrosswalk
+    url: mcp/pathwren-tool-crosswalk.yml
+  - type: GettingStarted
+    url: https://www.pathwren.workers.dev/.well-known/api-onboarding
+  - type: APIReference
+    url: https://www.pathwren.workers.dev/api.html
+  - type: ChangeLog
+    url: https://www.pathwren.workers.dev/changelog.html
+- aid: pathwren:pathwren-ip-ranges-api
+  name: AI Crawler Index Ip Ranges API
+  description: Operator-published prefixes, normalised.
+  humanURL: https://www.pathwren.workers.dev/api.html?s=ai-crawler-index&c=apis-json
+  baseURL: https://www.pathwren.workers.dev
+  tags:
+  - ip-ranges
+  properties:
+  - type: OpenAPI
+    url: openapi/pathwren-ip-ranges-api-openapi.yml
+  - type: x-openapi-yaml
+    url: https://www.pathwren.workers.dev/openapi.yaml
+  - type: Swagger
+    url: https://www.pathwren.workers.dev/swagger.json
+  - type: Documentation
+    url: https://www.pathwren.workers.dev/api.html
+  - type: Feed
+    url: https://www.pathwren.workers.dev/feed.xml
+  - type: Feed
+    url: https://www.pathwren.workers.dev/feed.json
+  - type: x-mcp-server
+    url: https://www.pathwren.workers.dev/mcp
+  - type: x-mcp-manifest
+    url: https://www.pathwren.workers.dev/.well-known/mcp.json
+  - type: x-onboarding
+    url: https://www.pathwren.workers.dev/.well-known/api-onboarding
+  - type: x-plugin-manifest
+    url: https://www.pathwren.workers.dev/.well-known/ai-plugin.json
+  - type: x-api-catalog
+    url: https://www.pathwren.workers.dev/.well-known/api-catalog
+  - type: x-llms-txt
+    url: https://www.pathwren.workers.dev/llms.txt
+  - type: x-bulk-data
+    url: https://www.pathwren.workers.dev/data/agents.json
+  - type: x-ip-ranges
+    url: https://www.pathwren.workers.dev/ip-ranges/all.json
+  - type: x-security-txt
+    url: https://www.pathwren.workers.dev/.well-known/security.txt
+  - type: x-sitemap
+    url: https://www.pathwren.workers.dev/sitemap.xml
+  - type: StatusPage
+    url: https://www.pathwren.workers.dev/status.html
+  - type: License
+    url: https://creativecommons.org/publicdomain/zero/1.0/
+  - type: JSONSchema
+    url: json-schema/pathwren-crawler.schema.json
+  - type: Authentication
+    url: authentication/pathwren-authentication.yml
+  - type: Conventions
+    url: conventions/pathwren-conventions.yml
+  - type: ErrorCatalog
+    url: errors/pathwren-problem-types.yml
+  - type: RateLimits
+    url: rate-limits/pathwren-rate-limits.yml
+  - type: DataModel
+    url: data-model/pathwren-data-model.yml
+  - type: ToolCrosswalk
+    url: mcp/pathwren-tool-crosswalk.yml
+  - type: GettingStarted
+    url: https://www.pathwren.workers.dev/.well-known/api-onboarding
+  - type: APIReference
+    url: https://www.pathwren.workers.dev/api.html
+  - type: ChangeLog
+    url: https://www.pathwren.workers.dev/changelog.html
+- aid: pathwren:pathwren-robots-api
+  name: AI Crawler Index Robots API
+  description: Ready-made robots.txt policy files.
+  humanURL: https://www.pathwren.workers.dev/api.html?s=ai-crawler-index&c=apis-json
+  baseURL: https://www.pathwren.workers.dev
+  tags:
+  - robots
+  properties:
+  - type: OpenAPI
+    url: openapi/pathwren-robots-api-openapi.yml
+  - type: x-openapi-yaml
+    url: https://www.pathwren.workers.dev/openapi.yaml
+  - type: Swagger
+    url: https://www.pathwren.workers.dev/swagger.json
+  - type: Documentation
+    url: https://www.pathwren.workers.dev/api.html
+  - type: Feed
+    url: https://www.pathwren.workers.dev/feed.xml
+  - type: Feed
+    url: https://www.pathwren.workers.dev/feed.json
+  - type: x-mcp-server
+    url: https://www.pathwren.workers.dev/mcp
+  - type: x-mcp-manifest
+    url: https://www.pathwren.workers.dev/.well-known/mcp.json
+  - type: x-onboarding
+    url: https://www.pathwren.workers.dev/.well-known/api-onboarding
+  - type: x-plugin-manifest
+    url: https://www.pathwren.workers.dev/.well-known/ai-plugin.json
+  - type: x-api-catalog
+    url: https://www.pathwren.workers.dev/.well-known/api-catalog
+  - type: x-llms-txt
+    url: https://www.pathwren.workers.dev/llms.txt
+  - type: x-bulk-data
+    url: https://www.pathwren.workers.dev/data/agents.json
+  - type: x-ip-ranges
+    url: https://www.pathwren.workers.dev/ip-ranges/all.json
+  - type: x-security-txt
+    url: https://www.pathwren.workers.dev/.well-known/security.txt
+  - type: x-sitemap
+    url: https://www.pathwren.workers.dev/sitemap.xml
+  - type: StatusPage
+    url: https://www.pathwren.workers.dev/status.html
+  - type: License
+    url: https://creativecommons.org/publicdomain/zero/1.0/
+  - type: JSONSchema
+    url: json-schema/pathwren-crawler.schema.json
+  - type: Authentication
+    url: authentication/pathwren-authentication.yml
+  - type: Conventions
+    url: conventions/pathwren-conventions.yml
+  - type: ErrorCatalog
+    url: errors/pathwren-problem-types.yml
+  - type: RateLimits
+    url: rate-limits/pathwren-rate-limits.yml
+  - type: DataModel
+    url: data-model/pathwren-data-model.yml
+  - type: ToolCrosswalk
+    url: mcp/pathwren-tool-crosswalk.yml
+  - type: GettingStarted
+    url: https://www.pathwren.workers.dev/.well-known/api-onboarding
+  - type: APIReference
+    url: https://www.pathwren.workers.dev/api.html
+  - type: ChangeLog
+    url: https://www.pathwren.workers.dev/changelog.html
+- aid: pathwren:pathwren-status-api
+  name: AI Crawler Index Status API
+  description: Freshness of the upstream sources.
+  humanURL: https://www.pathwren.workers.dev/api.html?s=ai-crawler-index&c=apis-json
+  baseURL: https://www.pathwren.workers.dev
+  tags:
+  - status
+  properties:
+  - type: OpenAPI
+    url: openapi/pathwren-status-api-openapi.yml
+  - type: x-openapi-yaml
+    url: https://www.pathwren.workers.dev/openapi.yaml
+  - type: Swagger
+    url: https://www.pathwren.workers.dev/swagger.json
+  - type: Documentation
+    url: https://www.pathwren.workers.dev/api.html
+  - type: Feed
+    url: https://www.pathwren.workers.dev/feed.xml
+  - type: Feed
+    url: https://www.pathwren.workers.dev/feed.json
+  - type: x-mcp-server
+    url: https://www.pathwren.workers.dev/mcp
+  - type: x-mcp-manifest
+    url: https://www.pathwren.workers.dev/.well-known/mcp.json
+  - type: x-onboarding
+    url: https://www.pathwren.workers.dev/.well-known/api-onboarding
+  - type: x-plugin-manifest
+    url: https://www.pathwren.workers.dev/.well-known/ai-plugin.json
+  - type: x-api-catalog
+    url: https://www.pathwren.workers.dev/.well-known/api-catalog
+  - type: x-llms-txt
+    url: https://www.pathwren.workers.dev/llms.txt
+  - type: x-bulk-data
+    url: https://www.pathwren.workers.dev/data/agents.json
+  - type: x-ip-ranges
+    url: https://www.pathwren.workers.dev/ip-ranges/all.json
+  - type: x-security-txt
+    url: https://www.pathwren.workers.dev/.well-known/security.txt
+  - type: x-sitemap
+    url: https://www.pathwren.workers.dev/sitemap.xml
+  - type: StatusPage
+    url: https://www.pathwren.workers.dev/status.html
+  - type: License
+    url: https://creativecommons.org/publicdomain/zero/1.0/
+  - type: JSONSchema
+    url: json-schema/pathwren-crawler.schema.json
+  - type: Authentication
+    url: authentication/pathwren-authentication.yml
+  - type: Conventions
+    url: conventions/pathwren-conventions.yml
+  - type: ErrorCatalog
+    url: errors/pathwren-problem-types.yml
+  - type: RateLimits
+    url: rate-limits/pathwren-rate-limits.yml
+  - type: DataModel
+    url: data-model/pathwren-data-model.yml
+  - type: ToolCrosswalk
+    url: mcp/pathwren-tool-crosswalk.yml
+  - type: GettingStarted
+    url: https://www.pathwren.workers.dev/.well-known/api-onboarding
+  - type: APIReference
+    url: https://www.pathwren.workers.dev/api.html
+  - type: ChangeLog
+    url: https://www.pathwren.workers.dev/changelog.html
 common:
+- type: Overlay
+  url: overlays/pathwren-ai-crawler-index-overlay.yaml
 - type: Website
   url: https://pathwren.workers.dev
 - type: DeveloperPortal
