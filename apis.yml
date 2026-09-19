@@ -58,6 +58,8 @@ apis:
   humanURL: https://www.pathwren.workers.dev/api.html?s=ai-crawler-index&c=apis-json
   baseURL: https://www.pathwren.workers.dev
   tags:
+  - Bulk
+  tags_raw:
   - bulk
   properties:
   - type: OpenAPI
@@ -122,6 +124,8 @@ apis:
   humanURL: https://www.pathwren.workers.dev/api.html?s=ai-crawler-index&c=apis-json
   baseURL: https://www.pathwren.workers.dev
   tags:
+  - Crawlers
+  tags_raw:
   - crawlers
   properties:
   - type: OpenAPI
@@ -186,6 +190,8 @@ apis:
   humanURL: https://www.pathwren.workers.dev/api.html?s=ai-crawler-index&c=apis-json
   baseURL: https://www.pathwren.workers.dev
   tags:
+  - IP Ranges
+  tags_raw:
   - ip-ranges
   properties:
   - type: OpenAPI
@@ -250,6 +256,8 @@ apis:
   humanURL: https://www.pathwren.workers.dev/api.html?s=ai-crawler-index&c=apis-json
   baseURL: https://www.pathwren.workers.dev
   tags:
+  - Robots
+  tags_raw:
   - robots
   properties:
   - type: OpenAPI
@@ -314,6 +322,8 @@ apis:
   humanURL: https://www.pathwren.workers.dev/api.html?s=ai-crawler-index&c=apis-json
   baseURL: https://www.pathwren.workers.dev
   tags:
+  - Status
+  tags_raw:
   - status
   properties:
   - type: OpenAPI
