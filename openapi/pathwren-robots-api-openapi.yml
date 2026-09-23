@@ -1,0 +1,71 @@
+openapi: 3.2.0
+info:
+  title: AI Crawler Index Robots API
+  version: '2026-09-01'
+  summary: Every AI crawler on the web, what it is for, what blocking it costs you, and the IP ranges its operator publishes — as JSON, CSV, robots.txt and regex.
+  description: 'A read-only, static, keyless index of 56 web crawlers operated by 30 companies and projects: what each one is for, the exact robots.txt token and user-agent substring, whether the operator says it obeys robots.txt, how to verify it is genuine, and — the part nobody else publishes — what you lose by blocking it.'
+  license:
+    name: CC0-1.0
+    url: https://creativecommons.org/publicdomain/zero/1.0/
+  contact:
+    url: https://www.pathwren.workers.dev/about.html
+servers:
+- url: https://www.pathwren.workers.dev
+tags:
+- name: Robots
+  description: Ready-made robots.txt policy files.
+paths:
+  /robots/{policy}.txt:
+    get:
+      summary: A ready-made robots.txt policy file
+      operationId: getRobotsPolicy
+      tags:
+      - Robots
+      parameters:
+      - name: policy
+        in: path
+        required: true
+        schema:
+          type: string
+          enum:
+          - allow-all
+          - block-ai-training
+          - block-all-ai
+          - block-datasets
+          - allow-ai-search-only
+          - block-seo-tools
+          - block-disputed
+          - maximum-ai-visibility
+      responses:
+        '200':
+          description: robots.txt fragment, ready to append
+          content:
+            text/plain:
+              schema:
+                type: string
+  /policy/{policy}.json:
+    get:
+      summary: A policy with its rationale and the crawlers it names
+      operationId: getPolicy
+      tags:
+      - Robots
+      parameters:
+      - name: policy
+        in: path
+        required: true
+        schema:
+          type: string
+          enum:
+          - allow-all
+          - block-ai-training
+          - block-all-ai
+          - block-datasets
+          - allow-ai-search-only
+          - block-seo-tools
+          - block-disputed
+          - maximum-ai-visibility
+      responses:
+        '200':
+          description: Policy record
+          content:
+            application/json: {}

@@ -1,0 +1,175 @@
+openapi: 3.2.0
+info:
+  title: AI Crawler Index Bulk API
+  version: '2026-09-01'
+  summary: Every AI crawler on the web, what it is for, what blocking it costs you, and the IP ranges its operator publishes — as JSON, CSV, robots.txt and regex.
+  description: 'A read-only, static, keyless index of 56 web crawlers operated by 30 companies and projects: what each one is for, the exact robots.txt token and user-agent substring, whether the operator says it obeys robots.txt, how to verify it is genuine, and — the part nobody else publishes — what you lose by blocking it.'
+  license:
+    name: CC0-1.0
+    url: https://creativecommons.org/publicdomain/zero/1.0/
+  contact:
+    url: https://www.pathwren.workers.dev/about.html
+servers:
+- url: https://www.pathwren.workers.dev
+tags:
+- name: Bulk
+  description: The whole dataset in several shapes.
+paths:
+  /data/agents.json:
+    get:
+      summary: Every crawler record, plus categories and an endpoint map
+      operationId: listCrawlers
+      tags:
+      - Bulk
+      responses:
+        '200':
+          description: 56 records
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  count:
+                    type: integer
+                  generated_at:
+                    type: string
+                    format: date-time
+                  crawlers:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Crawler'
+              example:
+                count: 56
+                generated_at: '2026-09-01T11:48:49+00:00'
+                crawlers:
+                - slug: oai-searchbot
+                  name: OAI-SearchBot
+                  operator: OpenAI
+                  operator_slug: openai
+                  category: ai-search
+                  category_label: AI search crawlers
+                  robots_token: OAI-SearchBot
+                  user_agent_substring: OAI-SearchBot
+                  user_agent_example: Mozilla/5.0 AppleWebKit/537.36 (KHTML, like Gecko); compatible; OAI-SearchBot/1.0; +https://openai.com/searchbot
+                  respects_robots_txt: documented
+                  respects_robots_txt_label: obeys robots.txt (documented)
+                  verification_method: published-ranges
+                  verification_label: published IP ranges
+                  published_ip_ranges_url: https://openai.com/searchbot.json
+                  ip_ranges_endpoint: https://www.pathwren.workers.dev/ip-ranges/openai-searchbot.json
+                  ipv4_prefix_count: 35
+                  ipv6_prefix_count: 0
+                  what_it_is: Builds the index ChatGPT search answers from. Content it collects is used for retrieval and citation, not for model training.
+                  cost_of_blocking: High. Blocking this removes you from ChatGPT search results and from the source links ChatGPT shows. This is the single most expensive block on this list for anyone who wants to be cited by an assistant.
+                  operator_docs: https://platform.openai.com/docs/bots
+                  html_url: https://www.pathwren.workers.dev/crawler/oai-searchbot.html
+                  json_url: https://www.pathwren.workers.dev/crawler/oai-searchbot.json
+                  last_reviewed: '2026-09-01'
+  /data/agents.csv:
+    get:
+      summary: The same table as CSV
+      operationId: listCrawlersCsv
+      tags:
+      - Bulk
+      responses:
+        '200':
+          description: CSV with a header row
+          content:
+            text/csv:
+              schema:
+                type: string
+  /data/ua-regex.json:
+    get:
+      summary: Pre-escaped user-agent regexes, whole-list and per category
+      operationId: getUserAgentRegex
+      tags:
+      - Bulk
+      responses:
+        '200':
+          description: Regex alternations
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  all:
+                    type: string
+                  ai_only:
+                    type: string
+                  by_category:
+                    type: object
+                    additionalProperties:
+                      type: string
+components:
+  schemas:
+    Crawler:
+      type: object
+      required:
+      - slug
+      - name
+      - operator
+      - category
+      - robots_token
+      properties:
+        slug:
+          type: string
+          description: Stable identifier used in URLs.
+        name:
+          type: string
+        operator:
+          type: string
+        operator_slug:
+          type: string
+        category:
+          type: string
+          enum:
+          - ai-search
+          - ai-training
+          - archive
+          - dataset
+          - preview
+          - search
+          - seo
+          - tool
+          - user-fetch
+        robots_token:
+          type: string
+          description: Exact User-agent value for robots.txt.
+        user_agent_substring:
+          type: string
+          description: Substring that reliably identifies it in a UA header. A match is a claim, not a proof.
+        user_agent_example:
+          type: string
+        respects_robots_txt:
+          type: string
+          enum:
+          - documented
+          - by-design-no
+          - disputed
+          - n-a
+        verification_method:
+          type: string
+          enum:
+          - published-ranges
+          - reverse-dns
+          - none
+        published_ip_ranges_url:
+          type:
+          - string
+          - 'null'
+          format: uri
+        ipv4_prefix_count:
+          type: integer
+        ipv6_prefix_count:
+          type: integer
+        what_it_is:
+          type: string
+        cost_of_blocking:
+          type: string
+          description: What you lose by disallowing it. This index's own assessment, not the operator's.
+        operator_docs:
+          type: string
+          format: uri
+        last_reviewed:
+          type: string
+          format: date

@@ -1,0 +1,85 @@
+openapi: 3.2.0
+info:
+  title: AI Crawler Index Ip Ranges API
+  version: '2026-09-01'
+  summary: Every AI crawler on the web, what it is for, what blocking it costs you, and the IP ranges its operator publishes — as JSON, CSV, robots.txt and regex.
+  description: 'A read-only, static, keyless index of 56 web crawlers operated by 30 companies and projects: what each one is for, the exact robots.txt token and user-agent substring, whether the operator says it obeys robots.txt, how to verify it is genuine, and — the part nobody else publishes — what you lose by blocking it.'
+  license:
+    name: CC0-1.0
+    url: https://creativecommons.org/publicdomain/zero/1.0/
+  contact:
+    url: https://www.pathwren.workers.dev/about.html
+servers:
+- url: https://www.pathwren.workers.dev
+tags:
+- name: IP Ranges
+  description: Operator-published prefixes, normalised.
+paths:
+  /data/ip-sources.json:
+    get:
+      summary: Which operators publish verifiable IP ranges, and where
+      operationId: listIpSources
+      tags:
+      - IP Ranges
+      responses:
+        '200':
+          description: Source list
+          content:
+            application/json: {}
+  /ip-ranges/all.json:
+    get:
+      summary: Union of every operator-published prefix, grouped by source
+      operationId: getAllIpRanges
+      tags:
+      - IP Ranges
+      responses:
+        '200':
+          description: 1887 IPv4 and 1056 IPv6 prefixes
+          content:
+            application/json: {}
+  /ip-ranges/all.txt:
+    get:
+      summary: The same prefixes, one CIDR per line
+      tags:
+      - IP Ranges
+      operationId: getAllIpRangesText
+      responses:
+        '200':
+          description: 'Plain text, # comments'
+          content:
+            text/plain:
+              schema:
+                type: string
+  /ip-ranges/{source}.json:
+    get:
+      summary: One operator's published prefix list, normalised
+      operationId: getIpRangeSource
+      tags:
+      - IP Ranges
+      parameters:
+      - name: source
+        in: path
+        required: true
+        description: Source slug, from /data/ip-sources.json
+        schema:
+          type: string
+          enum:
+          - openai-gptbot
+          - openai-searchbot
+          - openai-chatgpt-user
+          - google-googlebot
+          - google-special
+          - google-user-triggered
+          - google-user-triggered-google
+          - bing-bingbot
+          - apple-applebot
+          - duckduckgo-duckduckbot
+          - perplexity-bot
+          - perplexity-user
+      responses:
+        '200':
+          description: Prefixes with provenance
+          content:
+            application/json: {}
+        '404':
+          description: No such source

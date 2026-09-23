@@ -1,0 +1,30 @@
+{
+  "provider": "pathwren",
+  "sources": [
+    "_original/pathwren-ai-crawler-index-openapi.json"
+  ],
+  "outputs": [
+    "pathwren-bulk-api-openapi.yml",
+    "pathwren-crawlers-api-openapi.yml",
+    "pathwren-ip-ranges-api-openapi.yml",
+    "pathwren-robots-api-openapi.yml",
+    "pathwren-status-api-openapi.yml"
+  ],
+  "archived": [],
+  "errors": [],
+  "warnings": [],
+  "notes": [
+    "1 archived document(s) dropped as subsets of other archived documents",
+    "sourced from openapi/_original/ (1 archived document(s)); previously refined output at the top level was skipped rather than re-split",
+    "pathwren-ai-crawler-index-openapi.json: upgraded openapi 3.1.0 -> OpenAPI 3.2.0",
+    "apis.yml register: already-registered"
+  ],
+  "skipped": [
+    "_original/pathwren-ai-crawler-index-openapi.yaml: archived document superseded by a larger archived document",
+    "pathwren-bulk-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "pathwren-crawlers-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "pathwren-ip-ranges-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "pathwren-robots-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "pathwren-status-api-openapi.yml: previously refined output, superseded by openapi/_original/"
+  ]
+}

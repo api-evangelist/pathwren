@@ -9,9 +9,7 @@ discovery:
   - path: /.well-known/agent.json
     canonical: false
     status: 200
-    note: >-
-      Legacy pre-0.3 path, byte-identical to the canonical one (both 5832 bytes). The provider's
-      llms.txt states the same document is also returned from GET /a2a.
+    note: Legacy pre-0.3 path, byte-identical to the canonical one (both 5832 bytes). The provider's llms.txt states the same document is also returned from GET /a2a.
 x-evidence:
   fetched: '2026-09-01'
   url: https://www.pathwren.workers.dev/.well-known/agent-card.json
@@ -33,8 +31,12 @@ card:
     streaming: false
     pushNotifications: false
     extendedAgentCard: false
-  defaultInputModes: [application/json, text/plain]
-  defaultOutputModes: [application/json, text/plain]
+  defaultInputModes:
+  - application/json
+  - text/plain
+  defaultOutputModes:
+  - application/json
+  - text/plain
   skills:
   - classify_user_agent
   - lookup_crawler
@@ -42,7 +44,7 @@ card:
   - generate_robots_txt
   - is_verified_crawler_ip
   - whats_changed
-grade: conformant
+  file: a2a/pathwren-agent-card.json
 grade_basis:
   capabilities_is_object: true
   protocolVersion_present: true
@@ -53,15 +55,9 @@ grade_basis:
   every_skill_has_id_name_description_tags: true
 deviations:
 - field: supportedInterfaces
-  observation: >-
-    Declared alongside the legacy top-level `url`/`preferredTransport` pair, listing the same
-    JSONRPC endpoint. Not a failure — it is the forward-compatible form plus the older one.
+  observation: Declared alongside the legacy top-level `url`/`preferredTransport` pair, listing the same JSONRPC endpoint. Not a failure — it is the forward-compatible form plus the older one.
 - field: capabilities.streaming / capabilities.pushNotifications
-  observation: >-
-    Both false and honestly so: the provider states in llms.txt that SendMessage answers with a
-    Message rather than inventing a task id, and that there is no task store. Declaring the
-    absence rather than claiming the capability is the correct posture.
-note: >-
-  The six A2A skills are the same six tools the /mcp server exposes (see mcp/pathwren-tool-crosswalk.yml).
-  This provider serves the same capability over three protocols — plain HTTP GETs described by
-  OpenAPI 3.1, MCP Streamable HTTP, and A2A JSON-RPC — none of them gated.
+  observation: 'Both false and honestly so: the provider states in llms.txt that SendMessage answers with a Message rather than inventing a task id, and that there is no task store. Declaring the absence rather than claiming the capability is the correct posture.'
+note: The six A2A skills are the same six tools the /mcp server exposes (see mcp/pathwren-tool-crosswalk.yml). This provider serves the same capability over three protocols — plain HTTP GETs described by OpenAPI 3.1, MCP Streamable HTTP, and A2A JSON-RPC — none of them gated.
+conformance:
+  grade: conformant

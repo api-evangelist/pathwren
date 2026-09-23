@@ -1,0 +1,49 @@
+openapi: 3.2.0
+info:
+  title: AI Crawler Index Status API
+  version: '2026-09-01'
+  summary: Every AI crawler on the web, what it is for, what blocking it costs you, and the IP ranges its operator publishes — as JSON, CSV, robots.txt and regex.
+  description: 'A read-only, static, keyless index of 56 web crawlers operated by 30 companies and projects: what each one is for, the exact robots.txt token and user-agent substring, whether the operator says it obeys robots.txt, how to verify it is genuine, and — the part nobody else publishes — what you lose by blocking it.'
+  license:
+    name: CC0-1.0
+    url: https://creativecommons.org/publicdomain/zero/1.0/
+  contact:
+    url: https://www.pathwren.workers.dev/about.html
+servers:
+- url: https://www.pathwren.workers.dev
+tags:
+- name: Status
+  description: Freshness of the upstream sources.
+paths:
+  /status.json:
+    get:
+      summary: Freshness and health of every upstream IP-range endpoint
+      operationId: getStatus
+      tags:
+      - Status
+      responses:
+        '200':
+          description: Per-source fetch state
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  sources_ok:
+                    type: integer
+                  sources_failed:
+                    type: integer
+                  generated_at:
+                    type: string
+                    format: date-time
+  /feed.json:
+    get:
+      summary: JSON Feed 1.1 of what changed
+      operationId: getFeed
+      tags:
+      - Status
+      responses:
+        '200':
+          description: JSON Feed
+          content:
+            application/feed+json: {}
