@@ -36,6 +36,7 @@ tags:
 - crawler IP ranges
 - llms-txt
 - Open Data
+- A2A
 tags_raw:
 - AI crawlers
 - web crawlers
@@ -47,6 +48,7 @@ tags_raw:
 - crawler IP ranges
 - llms.txt
 - open data
+- A2A
 maintainers:
 - FN: Pathwren
   email: pathwren@tutamail.com
@@ -56,7 +58,6 @@ apis:
   name: AI Crawler Index Bulk API
   description: The whole dataset in several shapes.
   humanURL: https://www.pathwren.workers.dev/api.html?s=ai-crawler-index&c=apis-json
-  baseURL: https://www.pathwren.workers.dev
   tags:
   - Bulk
   tags_raw:
@@ -122,7 +123,6 @@ apis:
   name: AI Crawler Index Crawlers API
   description: One record per crawler.
   humanURL: https://www.pathwren.workers.dev/api.html?s=ai-crawler-index&c=apis-json
-  baseURL: https://www.pathwren.workers.dev
   tags:
   - Crawlers
   tags_raw:
@@ -188,7 +188,6 @@ apis:
   name: AI Crawler Index Ip Ranges API
   description: Operator-published prefixes, normalised.
   humanURL: https://www.pathwren.workers.dev/api.html?s=ai-crawler-index&c=apis-json
-  baseURL: https://www.pathwren.workers.dev
   tags:
   - IP Ranges
   tags_raw:
@@ -254,7 +253,6 @@ apis:
   name: AI Crawler Index Robots API
   description: Ready-made robots.txt policy files.
   humanURL: https://www.pathwren.workers.dev/api.html?s=ai-crawler-index&c=apis-json
-  baseURL: https://www.pathwren.workers.dev
   tags:
   - Robots
   tags_raw:
@@ -320,7 +318,6 @@ apis:
   name: AI Crawler Index Status API
   description: Freshness of the upstream sources.
   humanURL: https://www.pathwren.workers.dev/api.html?s=ai-crawler-index&c=apis-json
-  baseURL: https://www.pathwren.workers.dev
   tags:
   - Status
   tags_raw:
@@ -430,3 +427,10 @@ x-enrichment:
   status: enriched
   artifacts_added: 38
   pass: local-v1
+x-a2a:
+  verified: true
+  probed: '2026-09-26'
+  url: "https://www.pathwren.workers.dev/.well-known/agent-card.json"
+  grade: "conformant"
+  protocol_version: "1.0"
+  control: 404
