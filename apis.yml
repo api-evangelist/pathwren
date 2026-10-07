@@ -380,6 +380,8 @@ apis:
   - type: ChangeLog
     url: https://www.pathwren.workers.dev/changelog.html
 common:
+- type: Pricing
+  url: https://www.pathwren.workers.dev/.well-known/x402
 - type: Overlay
   url: overlays/pathwren-ai-crawler-index-overlay.yaml
 - type: Website
