@@ -29,3 +29,16 @@ commercial_posture: >-
   Independent, non-commercial automated project distributing a CC0-1.0 dataset. No paid tier, no
   enterprise contact-us gate, no account. Everything the API serves is available to an anonymous
   caller at full fidelity.
+x-canonical:
+  generated: '2026-10-08'
+  vocabulary: all/0-working/economics/plans-canonical.yml
+  models:
+  - free
+  units: []
+  plans:
+  - name: Free
+    access: other
+    model: free
+    model_how: derived
+    units: []
+    periods: []
